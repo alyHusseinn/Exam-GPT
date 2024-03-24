@@ -1,6 +1,10 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../models/user");
 const { body, validationResult } = require("express-validator");
+const multer = require("multer");
+const { storage } = require("../storage");
+
+const upload = multer({ storage });
 
 exports.registerUser_get = (req, res) => {
   res.render("register", {
@@ -9,6 +13,7 @@ exports.registerUser_get = (req, res) => {
 };
 
 exports.registerUser_post = [
+  upload.single("avatar"),
   body("username", "Please enter a valid username")
     .trim()
     .escape()
@@ -27,10 +32,12 @@ exports.registerUser_post = [
         errors: errors.array(),
       });
     } else {
-      const { username, password } = req.body;
+      const { username, password, role } = req.body;
       const user = new User({
         username,
         password,
+        avatar: req.file.path,
+        role,
       });
       try {
         await user.save();
