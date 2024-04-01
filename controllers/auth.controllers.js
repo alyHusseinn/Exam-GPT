@@ -3,6 +3,7 @@ const User = require("../models/user");
 const { body, validationResult } = require("express-validator");
 const multer = require("multer");
 const { storage } = require("../storage");
+const jwt = require("jsonwebtoken");
 
 const upload = multer({ storage });
 
@@ -74,6 +75,7 @@ exports.login_post = [
     .escape()
     .isLength({ min: 8 })
     .withMessage("Password must be at least 8 characters long"),
+
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -104,6 +106,28 @@ exports.login_post = [
             },
           ],
         });
+      } else {
+        const payload = {
+          user: {
+            id: user._id,
+            role: user.role,
+            username: user.username,
+          },
+        };
+        jwt.sign(
+          payload,
+          process.env.JWT_SECRET,
+          { expiresIn: "5 days" },
+          (err, token) => {
+            if (err) throw err;
+            res.cookie("token", token, {
+              maxAge: 5 * 24 * 60 * 60 * 1000,
+              httpOnly: true,
+              path: "/",
+            });
+            res.redirect("/home");
+          }
+        );
       }
     }
   }),
