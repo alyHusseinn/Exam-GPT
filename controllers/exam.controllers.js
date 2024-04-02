@@ -14,7 +14,6 @@ exports.exam_create = [
     .isNumeric()
     .withMessage("Number of questions must be a number"),
   body("type")
-    .ensure()
     .isIn(["mcq", "essay"])
     .withMessage("Type must be either 'mcq' or 'essay'"),
   asyncHandler(async (req, res, next) => {

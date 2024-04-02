@@ -7,13 +7,13 @@ const jwt = require("jsonwebtoken");
 
 const upload = multer({ storage });
 
-exports.registerUser_get = (req, res) => {
+exports.signup_get= (req, res) => {
   res.render("register", {
     title: "Register",
   });
 };
 
-exports.registerUser_post = [
+exports.signup_post = [
   upload.single("avatar"),
   body("username", "Please enter a valid username")
     .trim()
