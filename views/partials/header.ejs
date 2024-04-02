@@ -1,0 +1,14 @@
+<header class="w-full flex flex-row justify-between p-4 bg-slate-900 text-slate-100">
+    <div class="logo">
+        <a href="/" class="text-2xl p-4 font-black decoration-slate-900">Exam Generator</a>
+    </div>
+    <nav class="w-1/2 flex flex-row justify-between">
+        <% if (!locals.user) { %>
+            <a href="/login">LogIn</a>
+            <a href="/signup">SignUp</a> 
+        <% } %>
+        <% if (locals.user) { %>
+            <a href="/logout">LogOut</a>
+        <% } %>
+    </nav>
+</header>
