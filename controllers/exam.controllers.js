@@ -8,7 +8,7 @@ exports.exam_create = [
   body("topic")
     .isLength({ min: 5 })
     .withMessage("Topic must be more than 5 characters"),
-  body("numberOfQuestions")
+  body("questions_number")
     .isLength({ min: 5 })
     .withMessage("Number of questions must be more than 5 characters")
     .isNumeric()
@@ -24,11 +24,11 @@ exports.exam_create = [
         errors: errors.array(),
       });
     } else {
-      const { topic, type, numberOfQuestions } = req.body;
+      const { topic, type, questions_number } = req.body;
       const exam = new Exam({
         topic,
         type,
-        numberOfQuestions,
+        numberOfQuestions: questions_number,
         teacher: req.user._id, // get from the cookie middlewared
       });
       try {

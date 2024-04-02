@@ -1,18 +1,19 @@
 const jwt = require("jsonwebtoken");
-
-const isAuth = (req, res, next) => {
+const { JWT_SECRET } = require("../config/env");
+const checkJwt = (req, res, next) => {
     const token = req.cookies.token;
     if (!token) {
         return res.redirect("/login");
     }
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, JWT_SECRET);
         req.user = decoded;
-        req.locals.user = decoded; // to be used in views
+        res.locals.user = decoded; // to be used in views
         next();
     } catch (error) {
+        console.error(error);
         res.status(400).send("Invalid token.");
     }
 }
 
-module.exports = isAuth;
+module.exports = checkJwt;

@@ -2,10 +2,10 @@ const Teacher = require('../models/user');
 const asyncHandler = require('express-async-handler');
 /* const { body, validationResult } = require('express-validator'); */
 
-exports.getAllTeachers = asyncHandler(async (req, res) => {
+exports.getHomePage = asyncHandler(async (req, res) => {
     const teachers = await Teacher.find({role: 'teacher'}).select('-password').exec();
     res.render('home', {
-        title: 'Teachers',
+        title: 'home',
         teachers: teachers
     })
 });
