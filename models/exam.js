@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const generateQuestions = require('../openai');
+const generateQuestions = require('../Ai/openai');
 
 const Schema = mongoose.Schema;
 
