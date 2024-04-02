@@ -3,6 +3,7 @@ const teacherControllers = require("../controllers/teacher.controllers");
 const authControllers = require("../controllers/auth.controllers");
 const checkJWT = require("../middlewares/checkJWT");
 const checkRole = require("../middlewares/checkRole");
+const router = require('express').Router();
 
 router.get("/", function (req, res, next) {
   res.redirect("/home");
@@ -15,8 +16,8 @@ router.get("/teacher/:id", checkJWT, teacherControllers.getTeacher);
 router.get("/exam/:id", examControllers.exam_get);
 router.post(
   "/exam",
-  checkJWT,
-  checkRole("teacher"),
+  [checkJWT,
+  checkRole("teacher")],
   examControllers.exam_create
 );
 router.post("/exam/id", checkJWT, checkRole("student"), examControllers.exam_submit);
@@ -26,7 +27,5 @@ router.get("/signup", authControllers.signup_get);
 router.post("/signup", authControllers.signup_post);
 router.get("/login", authControllers.login_get);
 router.post("/login", authControllers.login_post);
-
-module.exports = router;
 
 module.exports = router;
