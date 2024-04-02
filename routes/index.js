@@ -9,7 +9,7 @@ router.get("/", function (req, res, next) {
   res.redirect("/home");
 });
 /* GET home page. */
-router.get("/home", checkJWT, teacherControllers.getAllTeachers);
+router.get("/home", checkJWT, teacherControllers.getHomePage);
 router.get("/teacher/:id", checkJWT, teacherControllers.getTeacher);
 
 // Exam routes
@@ -27,5 +27,6 @@ router.get("/signup", authControllers.signup_get);
 router.post("/signup", authControllers.signup_post);
 router.get("/login", authControllers.login_get);
 router.post("/login", authControllers.login_post);
+router.post('/logout', authControllers.logout_post);
 
 module.exports = router;

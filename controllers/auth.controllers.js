@@ -4,10 +4,11 @@ const { body, validationResult } = require("express-validator");
 const multer = require("multer");
 const { storage } = require("../storage");
 const jwt = require("jsonwebtoken");
+const { NODE_ENV, JWT_SECRET } = require("../config/env");
 
 const upload = multer({ storage });
 
-exports.signup_get= (req, res) => {
+exports.signup_get = (req, res) => {
   res.render("signup", {
     title: "Register",
   });
@@ -86,18 +87,8 @@ exports.login_post = [
     } else {
       const { username, password } = req.body;
       const user = await User.findOne({ username });
-      if (!user) {
-        return res.render("login", {
-          title: "Login",
-          errors: [
-            {
-              msg: "Invalid username or password",
-            },
-          ],
-        });
-      }
-      const isMatch = await user.matchPassword(password);
-      if (!isMatch) {
+      const isPasswordMatch = await user.matchPassword(password);
+      if (!user && !isPasswordMatch) {
         return res.render("login", {
           title: "Login",
           errors: [
@@ -108,27 +99,31 @@ exports.login_post = [
         });
       } else {
         const payload = {
-          user: {
-            id: user._id,
-            role: user.role,
-            username: user.username,
-          },
+          id: user._id,
+          role: user.role,
+          username: user.username,
+          avatar: user.avatar,
         };
-        jwt.sign(
-          payload,
-          process.env.JWT_SECRET,
-          { expiresIn: "5 days" },
-          (err, token) => {
-            if (err) throw err;
-            res.cookie("token", token, {
-              maxAge: 5 * 24 * 60 * 60 * 1000,
-              httpOnly: true,
-              path: "/",
-            });
-            res.redirect("/home");
-          }
-        );
+
+        const token = jwt.sign(payload, JWT_SECRET, {
+          expiresIn: "5 days",
+          algorithm: "HS256",
+        });
+
+        res.cookie("token", token, {
+          maxAge: 5 * 24 * 60 * 60 * 1000,
+          secure: NODE_ENV === "production" ? true : false,
+          httpOnly: true,
+          path: "/",
+        });
+
+        res.redirect("home");
       }
     }
   }),
 ];
+
+exports.logout_post = (req, res, next) => {
+  res.cookie("token", "");
+  res.redirect("home");
+}
