@@ -43,7 +43,6 @@ userSchema.pre('save', async function(next) {
 
 userSchema.post('save', async function(next) {
     console.log(this);
-    next();
 });
 
 module.exports = mongoose.model('User', userSchema);

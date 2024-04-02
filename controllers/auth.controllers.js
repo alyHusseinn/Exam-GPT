@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 const upload = multer({ storage });
 
 exports.signup_get= (req, res) => {
-  res.render("register", {
+  res.render("signup", {
     title: "Register",
   });
 };
@@ -28,7 +28,7 @@ exports.signup_post = [
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      res.render("register", {
+      res.render("signup", {
         title: "Register",
         errors: errors.array(),
       });
@@ -45,11 +45,11 @@ exports.signup_post = [
         res.redirect("/login");
       } catch (err) {
         console.log(err);
-        res.render("register", {
+        res.render("signup", {
           title: "Register",
           errors: [
             {
-              msg: "Username already exists",
+              msg: err.message,
             },
           ],
         });

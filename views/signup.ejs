@@ -9,12 +9,12 @@
         <h2
           class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900"
         >
-          Sign in to your account!
+          Create a new account!
         </h2>
       </div>
 
       <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form class="space-y-6" method="POST">
+        <form class="space-y-6" method="POST" enctype="multipart/form-data">
           <div>
             <label
               for="username"
@@ -27,8 +27,8 @@
                 name="username"
                 type="text"
                 autocomplete="username"
-                minlength="5"
                 required
+                minlength="5"
                 class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:bg-gray-300 sm:text-sm sm:leading-6"
               />
             </div>
@@ -56,21 +56,63 @@
           </div>
 
           <div>
+            <div class="flex items-center justify-between">
+              <label
+                for="avatar"
+                class="block text-sm font-medium leading-6 text-gray-900"
+                >Photo</label
+              >
+            </div>
+            <div class="mt-2">
+              <input
+                id="avatar"
+                name="avatar"
+                type="file"
+                required
+                class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-300 sm:text-sm sm:leading-6"
+              />
+            </div>
+          </div>
+          <div class="mb-6">
+            <div class="flex items-center justify-between">
+              <label
+                for="role"
+                class="text-sm mb-2 font-medium leading-6 text-gray-900"
+                >Who You Are</label
+              >
+            </div>
+
+            <diV class="mt-2">
+              <select
+                value=""
+                id="role"
+                name="role"
+                required
+                class="shadow appearance-none border rounded-md w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              >
+                <option value="">--please select a Role--</option>
+                <option value="teacher">Teacher</option>
+                <option value="student">Student</option>
+              </select>
+            </diV>
+          </div>
+
+          <div>
             <button
               type="submit"
               class="flex w-full justify-center rounded-md bg-gray-950 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              Sign in
+              Sign up
             </button>
           </div>
         </form>
 
         <p class="mt-10 text-center text-sm text-gray-500">
-          Not a member?
+          You are a member?
           <a
-            href="/signup"
+            href="/login"
             class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
-            >Sign Up!</a
+            >Sign in!</a
           >
         </p>
 
