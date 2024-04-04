@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
+const ENV = require('./config/env');
 
 var app = express();
 const connectDatabase = require('./config/db');
@@ -28,5 +29,7 @@ app.use(function(req, res, next) {
 
 const errorHandler = require("./middlewares/errorHandler");
 app.use(errorHandler);
+
+app.listen(ENV.PORT, _ => console.log('listening on port ' + ENV.PORT));
 
 module.exports = app;
