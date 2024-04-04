@@ -20,7 +20,7 @@ router.post(
   checkRole("teacher")],
   examControllers.exam_create
 );
-router.post("/exam/id", checkJWT, checkRole("student"), examControllers.exam_submit);
+router.post("/exam/:id", [checkJWT, checkRole("student")], examControllers.exam_submit);
 
 // Auth routesd
 router.get("/signup", authControllers.signup_get);

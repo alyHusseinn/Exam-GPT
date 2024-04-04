@@ -68,8 +68,16 @@ examSchema.virtual("url").get(function () {
 // generate the exam questions before saving.
 examSchema.pre("save", async function () {
   this.type === "mcq"
-    ? (this.mcqQuestions = await generateQuestions( this.topic, this.numberOfQuestions, true ))
-    : (this.essayQuestions = await generateQuestions( this.topic, this.numberOfQuestions, false));
+    ? (this.mcqQuestions = await generateQuestions(
+        this.topic,
+        this.numberOfQuestions,
+        true,
+      ))
+    : (this.essayQuestions = await generateQuestions(
+        this.topic,
+        this.numberOfQuestions,
+        false,
+      ));
 });
 
 module.exports = mongoose.model("Exam", examSchema);
