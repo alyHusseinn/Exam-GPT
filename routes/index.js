@@ -1,7 +1,7 @@
 const examControllers = require("../controllers/exam.controllers");
 const teacherControllers = require("../controllers/teacher.controllers");
 const authControllers = require("../controllers/auth.controllers");
-const checkJWT = require("../middlewares/checkJWT");
+const checkJWT = require("../middlewares/checkJwt");
 const checkRole = require("../middlewares/checkRole");
 const router = require('express').Router();
 
