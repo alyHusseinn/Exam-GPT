@@ -26,8 +26,8 @@ const userSchema = new Schema({
 
 userSchema.virtual("url").get(function () {
   return this.role === "teacher"
-    ? `/teachers/${this._id}`
-    : `/students/${this._id}`;
+    ? `/teacher/${this._id}`
+    : `/student/${this._id}`;
 });
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
