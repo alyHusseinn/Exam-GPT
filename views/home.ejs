@@ -1,22 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <%- include('partials/head'); %>
-</head>
-<body>
+  </head>
+  <body class="w-screen">
     <!-- header -->
     <%- include('partials/header'); %>
-    <div class="content">
-        <div class="teachers-list">
-            <% for (var i = 0; i < teachers.length; i++) { %>
-                <div class="teacher">
-                    <a href="/teachers/<%- teachers[i]._id %>">
-                        <%- teachers[i].username %>
-                    </a>
-                    <img src="<%- teachers[i].avatar %>" alt="Avatar">
-                </div>
-            <% } %>
-        </div>
+    <div
+      class="flex flex-col justify-center items-center content-center gap-8 px-6 lg:px-8 py-12 w-full min-h-full"
+    >
+      <% if (locals.user.role === 'student') { %> 
+      <h1 class="font-bold text-5xl text-gray-900 leading-9 tracking-tight">
+        All Teachers
+      </h1>
+      <div class="flex flex-col gap-4 w-full text-gray-50 teachers-list">
+        <% locals.teachers.forEach(function(teacher){ %>
+        <a href="/<%= teacher.url %>" class="flex flex-row justify-between items-center bg-black p-4 rounded-3xl w-full font-bold">
+          <h2 class="uppercase"><%= teacher.username %></h2>
+          <img src="<%= teacher.avatar %>" alt="avatar" class="rounded-xl w-20 h-20">  
+        </a>
+        <% }) %> 
+      </div> 
+      <% } else { %>
+      <div class="sm:mx-auto sm:w-full sm:max-w-sm"> 
+        <h2
+          class="mt-10 font-bold text-2xl text-center text-gray-900 leading-9 tracking-tight"
+        >
+          Create a new Exam!
+        </h2>
+      </div>
+      <div class="sm:mx-auto mt-10 sm:w-full sm:max-w-sm">
+        <form class="space-y-6" method="POST">
+          <div>
+            <label
+              for="topic"
+              class="block font-medium text-gray-900 text-sm leading-6"
+              >Topic</label
+            >
+            <div class="mt-2">
+              <input
+                id="topic"
+                name="topic"
+                type="text"
+                autocomplete="topic"
+                minlength="5"
+                required
+                class="block border-0 focus:bg-gray-300 shadow-sm p-1.5 rounded-md w-full text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 ring-1 ring-gray-300 ring-inset focus:ring-2 focus:ring-inset"
+              />
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between items-center">
+              <label
+                for="questions_number"
+                class="block font-medium text-gray-900 text-sm leading-6"
+                >Number of Questions?</label
+              >
+            </div>
+            <div class="mt-2">
+              <input
+                id="questions_number"
+                name="questions_number"
+                type="number"
+                min="5"
+                required
+                class="block border-0 focus:bg-gray-300 shadow-sm p-1.5 rounded-md w-full text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 ring-1 ring-gray-300 ring-inset focus:ring-inset focus:ring-gray-300"
+              />
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <div class="flex justify-between items-center">
+              <label
+                for="type"
+                class="mb-2 font-medium text-gray-900 text-sm leading-6"
+                >Type of The Exam?</label
+              >
+            </div>
+
+            <diV class="mt-2">
+              <select
+                value=""
+                id="type"
+                name="type"
+                required
+                class="focus:border-gray-300 focus:bg-gray-300 shadow px-3 py-2 border rounded-md w-full text-gray-700 appearance-none ring-1 ring-gray-300 ring-inset focus:outline-none focus:ring-gray-300"
+              >
+                <option value="">--please select an exam Type--</option>
+                <option value="mcq">MCQ</option>
+                <option value="essay">Essay</option>
+              </select>
+            </diV>
+          </div>
+
+          <div>
+            <button
+              type="submit"
+              class="flex justify-center bg-gray-950 hover:bg-gray-600 shadow-sm px-3 py-1.5 rounded-md w-full font-semibold text-sm text-white leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Generate Exam!
+            </button>
+          </div>
+        </form>
+
+        <% if(typeof errors !== 'undefined') { %>
+        <ul>
+          <% errors.forEach(error => { %>
+          <li class="text-red-500"><%= error.msg %></li>
+          <% }) %>
+        </ul>
+        <% } %>
+      </div>
+      <% } %>
     </div>
-</body>
+  </body>
 </html>

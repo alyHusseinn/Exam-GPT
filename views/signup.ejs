@@ -1,129 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <%- include('partials/head'); %>
-  </head>
-  <body style="width: 100vw">
-    <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-      <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-        <h2
-          class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900"
-        >
-          Create a new account!
-        </h2>
-      </div>
 
-      <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form class="space-y-6" method="POST" enctype="multipart/form-data">
-          <div>
-            <label
-              for="username"
-              class="block text-sm font-medium leading-6 text-gray-900"
-              >Username</label
-            >
-            <div class="mt-2">
-              <input
-                id="username"
-                name="username"
-                type="text"
-                autocomplete="username"
-                required
-                minlength="5"
-                class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:bg-gray-300 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div>
+<head>
+  <%- include('partials/head'); %>
+</head>
 
-          <div>
-            <div class="flex items-center justify-between">
-              <label
-                for="password"
-                class="block text-sm font-medium leading-6 text-gray-900"
-                >Password</label
-              >
-            </div>
-            <div class="mt-2">
-              <input
-                id="password"
-                name="password"
-                type="password"
-                minlength="8"
-                autocomplete="current-password"
-                required
-                class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-300 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div>
-
-          <div>
-            <div class="flex items-center justify-between">
-              <label
-                for="avatar"
-                class="block text-sm font-medium leading-6 text-gray-900"
-                >Photo</label
-              >
-            </div>
-            <div class="mt-2">
-              <input
-                id="avatar"
-                name="avatar"
-                type="file"
-                required
-                class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-gray-300 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div>
-          <div class="mb-6">
-            <div class="flex items-center justify-between">
-              <label
-                for="role"
-                class="text-sm mb-2 font-medium leading-6 text-gray-900"
-                >Who You Are</label
-              >
-            </div>
-
-            <diV class="mt-2">
-              <select
-                value=""
-                id="role"
-                name="role"
-                required
-                class="shadow appearance-none border rounded-md w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              >
-                <option value="">--please select a Role--</option>
-                <option value="teacher">Teacher</option>
-                <option value="student">Student</option>
-              </select>
-            </diV>
-          </div>
-
-          <div>
-            <button
-              type="submit"
-              class="flex w-full justify-center rounded-md bg-gray-950 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-gray-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Sign up
-            </button>
-          </div>
-        </form>
-
-        <p class="mt-10 text-center text-sm text-gray-500">
-          You are a member?
-          <a
-            href="/login"
-            class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
-            >Sign in!</a
-          >
-        </p>
-
-        <% if(typeof errors !== 'undefined') { %>
-        <ul>
-          <% errors.forEach(error => { %>
-          <li class="text-red-500"><%= error.msg %></li>
-          <% }) %>
-        </ul>
-        <% } %>
-      </div>
+<body style="width: 100vw">
+  <%- include('partials/header') %>
+  <div class="flex flex-col justify-center px-6 lg:px-8 py-12 min-h-full">
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+      <h2 class="mt-10 font-bold text-2xl text-center text-gray-900 leading-9 tracking-tight">
+        Create a new account!
+      </h2>
     </div>
-  </body>
+
+    <div class="sm:mx-auto mt-10 sm:w-full sm:max-w-sm">
+      <form class="space-y-6" method="POST" enctype="multipart/form-data">
+        <div>
+          <label for="username" class="block font-medium text-gray-900 text-sm leading-6">Username</label>
+          <div class="mt-2">
+            <input id="username" name="username" type="text" autocomplete="username" required minlength="5" class="block border-0 focus:bg-gray-300 shadow-sm p-1.5 rounded-md w-full text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 ring-1 ring-gray-300 ring-inset focus:ring-2 focus:ring-inset" />
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between items-center">
+            <label for="password" class="block font-medium text-gray-900 text-sm leading-6">Password</label>
+          </div>
+          <div class="mt-2">
+            <input id="password" name="password" type="password" minlength="8" autocomplete="current-password" required class="block border-0 shadow-sm p-1.5 rounded-md w-full text-gray-900 placeholder:text-gray-400 ring-1 ring-gray-300 ring-inset focus:ring-2 focus:ring-inset focus:ring-gray-300 sm:text-sm sm:leading-6" />
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between items-center">
+            <label for="avatar" class="block font-medium text-gray-900 text-sm leading-6">Photo</label>
+          </div>
+          <div class="mt-2">
+            <input id="avatar" name="avatar" type="file" required class="block border-0 shadow-sm p-1.5 rounded-md w-full text-gray-900 placeholder:text-gray-400 ring-1 ring-gray-300 ring-inset focus:ring-2 focus:ring-inset focus:ring-gray-300 sm:text-sm sm:leading-6" />
+          </div>
+        </div>
+        <div class="mb-6">
+          <div class="flex justify-between items-center">
+            <label for="role" class="mb-2 font-medium text-gray-900 text-sm leading-6">Who You Are</label>
+          </div>
+
+          <diV class="mt-2">
+            <select value="" id="role" name="role" required class="focus:border-indigo-500 shadow px-3 py-2 border rounded-md w-full text-gray-700 appearance-none focus:outline-none focus:ring-indigo-500">
+              <option value="">--please select a Role--</option>
+              <option value="teacher">Teacher</option>
+              <option value="student">Student</option>
+            </select>
+          </diV>
+        </div>
+
+        <div>
+          <button type="submit" class="flex justify-center bg-gray-950 hover:bg-gray-600 shadow-sm px-3 py-1.5 rounded-md w-full font-semibold text-sm text-white leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+            Sign up
+          </button>
+        </div>
+      </form>
+
+      <p class="mt-10 text-center text-gray-500 text-sm">
+        You are a member?
+        <a href="/login" class="font-semibold text-indigo-600 hover:text-indigo-500 leading-6">Sign in!</a>
+      </p>
+
+      <% if(typeof errors !== 'undefined') { %>
+      <ul>
+        <% errors.forEach(error => { %>
+        <li class="text-red-500"><%= error.msg %></li>
+        <% }) %>
+      </ul>
+      <% } %>
+    </div>
+  </div>
+</body>
+
 </html>
