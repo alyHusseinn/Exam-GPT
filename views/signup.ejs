@@ -5,9 +5,9 @@
   <%- include('partials/head'); %>
 </head>
 
-<body style="width: 100vw">
+<body class="bg-main">
   <%- include('partials/header') %>
-  <div class="flex flex-col justify-center px-6 lg:px-8 py-12 min-h-full">
+  <div class="flex flex-col justify-center bg-main px-6 lg:px-8 py-12 min-h-full">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
       <h2 class="mt-10 font-bold text-2xl text-center text-gray-900 leading-9 tracking-tight">
         Create a new account!
@@ -19,7 +19,7 @@
         <div>
           <label for="username" class="block font-medium text-gray-900 text-sm leading-6">Username</label>
           <div class="mt-2">
-            <input id="username" name="username" type="text" autocomplete="username" required minlength="5" class="block border-0 focus:bg-gray-300 shadow-sm p-1.5 rounded-md w-full text-gray-900 placeholder:text-gray-400 sm:text-sm sm:leading-6 ring-1 ring-gray-300 ring-inset focus:ring-2 focus:ring-inset" />
+            <input id="username" name="username" type="text" autocomplete="username" required minlength="5" class="block border-0 bg-secondary shadow-md p-1.5 rounded-md w-full text-gray-900 sm:text-sm sm:leading-6 ring-1 ring-gray-300 ring-inset focus:ring-2 focus:ring-inset" />
           </div>
         </div>
 
@@ -28,7 +28,7 @@
             <label for="password" class="block font-medium text-gray-900 text-sm leading-6">Password</label>
           </div>
           <div class="mt-2">
-            <input id="password" name="password" type="password" minlength="8" autocomplete="current-password" required class="block border-0 shadow-sm p-1.5 rounded-md w-full text-gray-900 placeholder:text-gray-400 ring-1 ring-gray-300 ring-inset focus:ring-2 focus:ring-inset focus:ring-gray-300 sm:text-sm sm:leading-6" />
+            <input id="password" name="password" type="password" minlength="8" autocomplete="current-password" required class="block border-0 bg-secondary shadow-md p-1.5 rounded-md w-full text-gray-900 sm:text-sm sm:leading-6 ring-1 ring-gray-300 ring-inset focus:ring-2 focus:ring-inset" />
           </div>
         </div>
 
@@ -37,7 +37,7 @@
             <label for="avatar" class="block font-medium text-gray-900 text-sm leading-6">Photo</label>
           </div>
           <div class="mt-2">
-            <input id="avatar" name="avatar" type="file" required class="block border-0 shadow-sm p-1.5 rounded-md w-full text-gray-900 placeholder:text-gray-400 ring-1 ring-gray-300 ring-inset focus:ring-2 focus:ring-inset focus:ring-gray-300 sm:text-sm sm:leading-6" />
+            <input id="avatar" name="avatar" type="file" required class="block border-0 bg-secondary shadow-md p-1.5 rounded-md w-full text-gray-900 sm:text-sm sm:leading-6 ring-1 ring-gray-300 ring-inset focus:ring-2 focus:ring-inset" />
           </div>
         </div>
         <div class="mb-6">
@@ -46,7 +46,7 @@
           </div>
 
           <diV class="mt-2">
-            <select value="" id="role" name="role" required class="focus:border-indigo-500 shadow px-3 py-2 border rounded-md w-full text-gray-700 appearance-none focus:outline-none focus:ring-indigo-500">
+            <select value="" id="role" name="role" required class="block border-0 bg-secondary shadow-md p-1.5 rounded-md w-full text-gray-900 sm:text-sm sm:leading-6 ring-1 ring-gray-300 ring-inset focus:ring-2 focus:ring-inset">
               <option value="">--please select a Role--</option>
               <option value="teacher">Teacher</option>
               <option value="student">Student</option>
