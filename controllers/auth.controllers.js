@@ -102,7 +102,8 @@ exports.login_post = [
           id: user._id,
           role: user.role,
           username: user.username,
-          avatar: user.avatar
+          avatar: user.avatar,
+          url: user.url
         }
 
         const token = jwt.sign(payload, JWT_SECRET, {

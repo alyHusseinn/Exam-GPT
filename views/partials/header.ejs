@@ -4,10 +4,14 @@
     <% if (!locals.user) { %>
     <a href="/login" class="p-2 text-white hover:text-gray-200">LogIn</a>
     <a href="/signup" class="p-2 text-white hover:text-gray-200">SignUp</a>
+    
     <% } else { %>
     <form action="/logout" method="POST" class="text-white hover:text-gray-200">
       <button type="submit">Logout</button>
     </form>
+    <a href="<%= locals.user.url %>" class="p-2 text-white hover:text-gray-200">
+      <img src="<%= locals.user.avatar %>" style="width: 3rem; height: 3rem;" class="border-2 border-white border-solid rounded-lg w-10 h-10">
+    </a>
     <% } %>
   </nav>
 </header>
