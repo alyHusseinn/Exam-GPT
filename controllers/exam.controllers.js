@@ -31,7 +31,7 @@ exports.exam_create = [
       })
       try {
         const newExam = await exam.save()
-        res.redirect(newExam.url);
+        res.redirect(newExam.url)
       } catch (err) {
         console.log(err)
       }
@@ -40,7 +40,7 @@ exports.exam_create = [
 ]
 
 exports.exam_get = asyncHandler(async (req, res, next) => {
-  const exam = await Exam.findById(req.params.id).select('-students').exec();
+  const exam = await Exam.findById(req.params.id).select('-students').exec()
 
   if (!exam) {
     const error = new Error('Exam not found')
@@ -65,19 +65,37 @@ exports.exam_submit = asyncHandler(async (req, res, next) => {
   // check the validity of the answers
   // and then return the exam with the correct answers
   const exam = await Exam.findById(req.params.id)
-  const { answers } = req.body
+  const answers = []
+
+  Object.entries(req.body).forEach(([key, value]) => {
+    answers.push(value)
+  })
+
   const correctAnswers =
     exam.type === 'mcq'
-      ? exam.mcqQuestions.map((question) => question.answer)
-      : exam.essayQuestions.map((question) => question.answer)
-  const wrongAnswers = getWrongAnswers(exam.type, correctAnswers, answers);
+      ? exam.mcqQuestions.map((question) => question.answer) // the index of the answer
+      : exam.essayQuestions.map((question) => question.answer) // the answer in essay form
 
-  // update the exam schmea with the student's score
-  
-  res.render('exam', {
+  const wrongAnswers = getWrongAnswers(exam.type, correctAnswers, answers)
+
+  console.log(wrongAnswers)
+
+  const userScore =
+    ((correctAnswers.length - wrongAnswers.length) / correctAnswers.length) *
+    100
+
+  // update the schema with that information
+  exam.students.push({
+    student: req.user.id,
+    answers: answers,
+    score: userScore
+  })
+  await exam.save()
+
+  res.render('exam_results', {
     title: 'Exam Result',
     wrongAnswers,
     exam,
-    score: (wrongAnswers.length / correctAnswers.length) * 100
+    score: userScore
   })
 })
