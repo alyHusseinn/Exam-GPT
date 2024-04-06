@@ -7,7 +7,7 @@ const openai = new OpenAI({
 })
 
 const generateQuestions = async (topic, numOfQuestions, isMcq) => {
-  const promptNormalQuestions = `Generate ${numOfQuestions} questions about ${topic} in this JSON format: 
+  const promptNormalQuestions = `Generate ${numOfQuestions} questions about ${topic} in this JSON format and check that it is valid when Parse it with JSON.parse(): 
   {
     questions: [
       {
@@ -21,7 +21,7 @@ const generateQuestions = async (topic, numOfQuestions, isMcq) => {
     ]
   }`
 
-  const promptMcqQuestions = `Generate ${numOfQuestions} MCQ questions about ${topic} in this JSON format:
+  const promptMcqQuestions = `Generate ${numOfQuestions} MCQ questions about ${topic} in this right JSON format and check that it is valid when Parse it with JSON.parse():
   {
     questions: [
       {
@@ -45,7 +45,7 @@ const generateQuestions = async (topic, numOfQuestions, isMcq) => {
           content: isMcq ? promptMcqQuestions : promptNormalQuestions
         }
       ],
-      max_tokens: 1000 // Maximum length of the generated completion
+      //max_tokens: 1000 // Maximum length of the generated completion
     })
     // Check if choices array exists and is not empty
     if (questions.choices && questions.choices.length > 0) {
@@ -56,6 +56,7 @@ const generateQuestions = async (topic, numOfQuestions, isMcq) => {
     }
   } catch (error) {
     console.error('Error generating questions:', error)
+    throw new Error('Error generating questions');
     return null
   }
 }
