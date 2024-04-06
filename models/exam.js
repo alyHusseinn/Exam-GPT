@@ -29,8 +29,13 @@ const examSchema = new Schema({
         ref: 'User',
         required: true
       },
+      answers: {
+        type: [String],
+        required: true
+      },
       score: {
-        type: Number
+        type: Number,
+        required: true
       }
     }
   ],
