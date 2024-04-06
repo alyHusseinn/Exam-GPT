@@ -611,6 +611,10 @@ video {
   --tw-bg-opacity: 1;
   background-color: rgb(3 7 18 / var(--tw-bg-opacity));
 }
+.bg-green {
+  --tw-bg-opacity: 1;
+  background-color: rgb(12 96 4 / var(--tw-bg-opacity));
+}
 .bg-main {
   --tw-bg-opacity: 1;
   background-color: rgb(203 205 194 / var(--tw-bg-opacity));
@@ -676,6 +680,10 @@ video {
 .text-sm {
   font-size: 0.875rem;
   line-height: 1.25rem;
+}
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
 }
 .font-bold {
   font-weight: 700;

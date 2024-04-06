@@ -14,20 +14,28 @@
       <h2 class="border-2 bg-secondary p-4 border-text border-solid rounded-md text-2xl">Number of Questions: <%= exam.numberOfQuestions %></h2>
     </div>
     
-    <div class="flex flex-col gap-4 questions">
+    <div class="flex flex-col gap-4 p-8 questions">
 
       <% if(exam.type === 'mcq') { %>
       <% exam.mcqQuestions.forEach((question, index) => { %>
-        <div class="flex flex-col justify-center gap-4 border-2 bg-secondary p-4 border-text border-solid rounded-lg">
+        <div class="flex flex-col justify-center gap-4 border-2 bg-secondary shadow-md p-4 border-text border-solid rounded-lg">
           <h2 class="text-2xl"><%= index+1 %>.<%= question.question %></h2>
-          <h2 class="bg-main p-2 rounded-lg text-2xl">Answer: <%= question.choices[question.answer] %></h2>
+          <div class="bg-main p-2 rounded-lg text-xl choices">
+            <% question.choices.forEach((choice, idx) => { %>
+              <% if(idx === question.answer) { %>
+                <p class="bg-green p-1 rounded-md text-white"><%= idx+1%>. <%= choice %></p>
+              <% } else { %>
+                <p class="p-1"><%= idx+1%>. <%= choice %></p>
+              <% } %>
+            <% }) %>
+          </div>
         </div>
       <% }) %>
       <% } else {%>
       <% exam.essayQuestions.forEach((question, index) => { %>
-        <div class="flex flex-col justify-center gap-4 border-2 bg-secondary p-4 border-text border-solid rounded-lg">
+        <div class="flex flex-col justify-center gap-4 border-2 bg-secondary shadow-md p-4 border-text border-solid rounded-lg">
           <h2 class="text-2xl"><%= index+1 %>.<%= question.question %></h2>
-          <h2 class="bg-main p-2 rounded-lg text-2xl">Answer: <%= question.choices[question.answer] %></h2>
+          <h2 class="bg-main p-2 rounded-lg text-xl"><%= question.answer %></h2>
         </div>
       <% }) %>
       <% } %>
