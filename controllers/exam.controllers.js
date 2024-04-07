@@ -10,7 +10,9 @@ exports.exam_create = [
     .withMessage('Topic must be more than 5 characters'),
   body('questions_number')
     .isNumeric()
-    .withMessage('Number of questions must be a number'),
+    .withMessage('Number of questions must be a number')
+    .isLength({ min: 5, max: 40 })
+    .withMessage('Number of questions must be between 5 and 40'),
   body('type')
     .isIn(['mcq', 'essay'])
     .withMessage("Type must be either 'mcq' or 'essay'"),
@@ -130,24 +132,24 @@ exports.exam_results_get = asyncHandler(async (req, res, next) => {
     title: 'Exam Result',
     submition
   })
-});
+})
 
 exports.exam_delete = asyncHandler(async (req, res, next) => {
   const exam = await Exam.findById(req.params.id)
-  if(!exam) {
+  if (!exam) {
     const error = new Error('Exam not found')
     error.status = 404
     return next(error)
   }
-  if(exam.teacher.toString() != req.user.id.toString()) {
+  if (exam.teacher.toString() != req.user.id.toString()) {
     const error = new Error('You are not authorized to delete this exam')
     error.status = 401
     return next(error)
   }
-  try{
+  try {
     await Exam.findByIdAndDelete(req.params.id)
-    res.redirect('/home')
-  } catch(err) {
+    res.redirect(req.user.url)
+  } catch (err) {
     console.log(err)
   }
 })
