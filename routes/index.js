@@ -30,6 +30,8 @@ router.post(
   examControllers.exam_submit
 )
 
+router.post('/exam/:id/delete', [checkJWT, checkRole('teacher')], examControllers.exam_delete)
+
 // Auth routesd
 router.get('/signup', authControllers.signup_get)
 router.post('/signup', authControllers.signup_post)

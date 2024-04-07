@@ -130,4 +130,24 @@ exports.exam_results_get = asyncHandler(async (req, res, next) => {
     title: 'Exam Result',
     submition
   })
+});
+
+exports.exam_delete = asyncHandler(async (req, res, next) => {
+  const exam = await Exam.findById(req.params.id)
+  if(!exam) {
+    const error = new Error('Exam not found')
+    error.status = 404
+    return next(error)
+  }
+  if(exam.teacher.toString() != req.user.id.toString()) {
+    const error = new Error('You are not authorized to delete this exam')
+    error.status = 401
+    return next(error)
+  }
+  try{
+    await Exam.findByIdAndDelete(req.params.id)
+    res.redirect('/home')
+  } catch(err) {
+    console.log(err)
+  }
 })
