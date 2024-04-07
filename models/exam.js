@@ -22,23 +22,10 @@ const examSchema = new Schema({
     ref: 'User',
     required: true
   },
-  students: [
-    {
-      student: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-      },
-      answers: {
-        type: [String],
-        required: true
-      },
-      score: {
-        type: Number,
-        required: true
-      }
-    }
-  ],
+  submitions: {
+    type: [Schema.Types.ObjectId],
+    ref: 'Submition'
+  },
   essayQuestions: [
     {
       question: {
