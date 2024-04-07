@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head'); %>
+</head>
+<body class="bg-main">
+    <%- include('partials/header'); %>
+    <div class="flex flex-col justify-center gap-4 bg-main px-6 lg:px-8 py-12 min-h-full">
+        <h2 class="mt-10 font-bold text-3xl text-center text-gray-900 leading-9 tracking-tight">Student: <%= submition.student.fullName %></h2>
+        <h2 class="font-bold text-2xl text-center text-gray-900 leading-9 tracking-tight">Topic: <%= submition.exam.topic %></h2>
+        <h2 class="font-bold text-2xl text-center leading-9 tracking-tight">Score: <%= submition.score %> %</h2>
+        <div class="flex flex-col gap-4 p-8">
+            <% if(submition.exam.type == 'mcq') { %>
+                <% submition.exam.mcqQuestions.forEach((question, idx) => { %>
+                    <div class="flex flex-col justify-center gap-4 border-2 bg-secondary shadow-md p-4 border-text border-solid rounded-lg">
+                        <h2 for="question" class="text-2xl"><%= idx + 1 %>. <%= question.question %>
+                            <%- submition.wrongAnswers.includes(idx) ? `<span class="text-red">(Wrong Answer)</span>` : `<span class="text-green">(Correct Answer)</span>` %>
+                        </h2>
+                        <% if(submition.wrongAnswers.includes(idx)) { %>
+                            <div class="flex flex-col gap-4 text-xl">
+                                <div class="border-2 bg-main p-2 border-text border-solid rounded-lg correct-answer">
+                                    <h4 class="text-green text-xl">Correct Answer:</h4>
+                                    <p class="text-2xl"><%= question.answer + 1 + '. ' + question.choices[question.answer] %></p>
+                                </div>
+                                <div class="border-2 bg-main p-2 border-text border-solid rounded-lg your-answer">
+                                    <h4 class="text-red text-xl">Your Answer:</h4>
+                                    <p class="text-2xl"><%= +submition.answers[idx] + 1 + '. ' + question.choices[submition.answers[idx]] %></p>
+                                </div>
+                            </div>
+                        <% } else { %>
+                            <div class="flex flex-col gap-4 text-xl">
+                                <div class="border-2 bg-main p-2 border-text border-solid rounded-lg correct-answer">
+                                    <h4 class="text-green text-xl">Your Answer:</h4>
+                                    <p class="text-2xl"><%= question.answer+ 1 + '. ' + question.choices[question.answer] %></p>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <% submition.exam.essayQuestions.forEach((question, idx) => { %>
+                    <div class="flex flex-col justify-center gap-4 border-2 bg-secondary shadow-md p-4 border-text border-solid rounded-lg">
+                        <h2 for="question" class="text-2xl"><%= idx + 1 %>. <%= question.question %>
+                            <%- submition.wrongAnswers.includes(idx) ? `<span class="text-red">(Wrong Answer)</span>` : `<span class="text-green">(Correct Answer)</span>` %>
+                        </h2>
+                        <% if(submition.wrongAnswers.includes(idx)) { %>
+                            <div class="flex flex-col gap-4 text-xl">
+                                <div class="border-2 bg-main p-2 border-text border-solid rounded-lg correct-answer">
+                                    <h4 class="text-green text-xl">Correct Answer:</h4>
+                                    <p class=""><%= question.answer %></p>
+                                </div>
+                                <div class="border-2 bg-main p-2 border-text border-solid rounded-lg your-answer">
+                                    <h4 class="text-red text-xl">Your Answer:</h4>
+                                    <p class=""><%= submition.answers[idx] %></p>
+                                </div>
+                            </div>
+                        <% } else { %>
+                            <div class="flex flex-col gap-4 text-xl">
+                                <div class="border-2 bg-main p-2 border-text border-solid rounded-lg your-answer">
+                                    <h4 class="text-green text-xl">Your Answer:</h4>
+                                    <p class=""><%= submition.answers[idx] %></p>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                <% }) %>
+            <% } %>
+        </div>
+    </div>
+        
+</body>
+</html>
+</html>
+</html>

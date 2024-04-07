@@ -728,9 +728,17 @@ video {
   --tw-text-opacity: 1;
   color: rgb(17 24 39 / var(--tw-text-opacity));
 }
+.text-green {
+  --tw-text-opacity: 1;
+  color: rgb(12 96 4 / var(--tw-text-opacity));
+}
 .text-indigo-600 {
   --tw-text-opacity: 1;
   color: rgb(79 70 229 / var(--tw-text-opacity));
+}
+.text-red {
+  --tw-text-opacity: 1;
+  color: rgb(255 0 0 / var(--tw-text-opacity));
 }
 .text-text {
   --tw-text-opacity: 1;
