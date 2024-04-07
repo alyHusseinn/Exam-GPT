@@ -1,7 +1,7 @@
 const Exam = require('../models/exam')
+const Submition = require('../models/submition')
 const asyncHandler = require('express-async-handler')
 const { body, validationResult } = require('express-validator')
-const getWrongAnswers = require('../Ai/getWrongAnswers')
 
 // POST: create exam
 exports.exam_create = [
@@ -40,7 +40,7 @@ exports.exam_create = [
 ]
 
 exports.exam_get = asyncHandler(async (req, res, next) => {
-  const exam = await Exam.findById(req.params.id).select('-students').exec()
+  const exam = await Exam.findById(req.params.id).exec()
 
   if (!exam) {
     const error = new Error('Exam not found')
@@ -65,37 +65,56 @@ exports.exam_submit = asyncHandler(async (req, res, next) => {
   // check the validity of the answers
   // and then return the exam with the correct answers
   const exam = await Exam.findById(req.params.id)
-  const answers = []
 
-  Object.entries(req.body).forEach(([key, value]) => {
-    answers.push(value)
+  // check if the user has submit the exam before submitting
+  const submitions = await Submition.find({
+    exam: exam._id,
+    student: req.user.id
   })
+  if (submitions.length > 0) {
+    return res.redirect(exam.url)
+  }
 
-  const correctAnswers =
-    exam.type === 'mcq'
-      ? exam.mcqQuestions.map((question) => question.answer) // the index of the answer
-      : exam.essayQuestions.map((question) => question.answer) // the answer in essay form
-
-  const wrongAnswers = getWrongAnswers(exam.type, correctAnswers, answers)
-
-  console.log(wrongAnswers)
-
-  const userScore =
-    ((correctAnswers.length - wrongAnswers.length) / correctAnswers.length) *
-    100
+  const answers = Object.values(req.body)
 
   // update the schema with that information
-  exam.students.push({
+  const submition = new Submition({
+    exam: exam._id,
     student: req.user.id,
-    answers: answers,
-    score: userScore
+    answers
   })
-  await exam.save()
+
+  try {
+    const newSubmition = await submition.save();
+    await Exam.findByIdAndUpdate(req.params.id, {
+      $push: { submitions: newSubmition._id }
+    })
+    res.redirect(newSubmition.url)
+  } catch (err) {
+    console.log(err)
+  }
+})
+
+exports.exam_results_get = asyncHandler(async (req, res, next) => {
+  const submition = await Submition.findById(req.params.id)
+    .populate('exam student')
+    .exec()
+  if (!submition) {
+    const error = new Error('Submition not found')
+    error.status = 404
+    return next(error)
+  }
+  if (
+    submition.student._id.toString() !== req.user.id.toString() &&
+    submition.exam.teacher.toString() !== req.user.id.toString()
+  ) {
+    const error = new Error('You are not authorized to view this page')
+    error.status = 401
+    return next(error)
+  }
 
   res.render('exam_results', {
     title: 'Exam Result',
-    wrongAnswers,
-    exam,
-    score: userScore
+    submition
   })
 })
