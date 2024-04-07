@@ -11,7 +11,7 @@ exports.exam_create = [
   body('questions_number')
     .isNumeric()
     .withMessage('Number of questions must be a number')
-    .isLength({ min: 5, max: 40 })
+    .isInt({ min: 5, max: 40 })
     .withMessage('Number of questions must be between 5 and 40'),
   body('type')
     .isIn(['mcq', 'essay'])
