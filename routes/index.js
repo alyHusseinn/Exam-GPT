@@ -1,5 +1,5 @@
 const examControllers = require('../controllers/exam.controllers')
-const teacherControllers = require('../controllers/teacher.controllers')
+const userControllers = require('../controllers/user.controllers')
 const authControllers = require('../controllers/auth.controllers')
 const checkJWT = require('../middlewares/checkJwt')
 const checkRole = require('../middlewares/checkRole')
@@ -9,8 +9,9 @@ router.get('/', function (req, res, next) {
   res.redirect('/home')
 })
 /* GET home page. */
-router.get('/home', checkJWT, teacherControllers.getHomePage)
-router.get('/teacher/:id', checkJWT, teacherControllers.getTeacher)
+router.get('/home', checkJWT, userControllers.getHomePage)
+router.get('/teacher/:id', checkJWT, userControllers.getTeacher)
+router.get('/student/:id', checkJWT, userControllers.getStudent);
 
 // Exam routes
 router.get('/exam/:id', checkJWT, examControllers.exam_get);

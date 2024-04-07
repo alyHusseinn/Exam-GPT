@@ -16,6 +16,8 @@ exports.signup_get = (req, res) => {
 
 exports.signup_post = [
   upload.single('avatar'),
+  body('firstName').isLength({min: 3, max: 15}).withMessage('First name must be between 3 and 15 characters long'),
+  body('lastName').isLength({min: 3, max: 15}).withMessage('Last name must be between 3 and 15 characters long'),
   body('username', 'Please enter a valid username')
     .trim()
     .escape()
@@ -26,6 +28,7 @@ exports.signup_post = [
     .escape()
     .isLength({ min: 8 })
     .withMessage('Password must be at least 8 characters long'),
+  body('role').isIn(['student', 'teacher']).withMessage('Role must be either "student" or "teacher"'),
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
@@ -34,8 +37,10 @@ exports.signup_post = [
         errors: errors.array()
       })
     } else {
-      const { username, password, role } = req.body
+      const { username, password, role, firstName, lastName } = req.body
       const user = new User({
+        firstName,
+        lastName,
         username,
         password,
         avatar: req.file.path,
@@ -101,6 +106,7 @@ exports.login_post = [
         const payload = {
           id: user._id,
           role: user.role,
+          fullName: user.fullName,
           username: user.username,
           avatar: user.avatar,
           url: user.url

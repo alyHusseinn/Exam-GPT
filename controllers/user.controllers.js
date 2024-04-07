@@ -1,10 +1,11 @@
-const Teacher = require('../models/user')
+const User = require('../models/user')
 const Exam = require('../models/exam')
+const Submition = require('../models/submition')
 const asyncHandler = require('express-async-handler')
 /* const { body, validationResult } = require('express-validator'); */
 
 exports.getHomePage = asyncHandler(async (req, res) => {
-  const teachers = await Teacher.find({ role: 'teacher' })
+  const teachers = await User.find({ role: 'teacher' })
     .select('-password')
     .exec()
   res.render('home', {
@@ -16,7 +17,7 @@ exports.getHomePage = asyncHandler(async (req, res) => {
 
 exports.getTeacher = asyncHandler(async (req, res) => {
   const [teacher, exams] = await Promise.all([
-    Teacher.findById(req.params.id).select('-password').exec(),
+    User.findById(req.params.id).select('-password').exec(),
     Exam.find({ teacher: req.params.id })
       .select('topic numberOfQuestions type')
       .exec()
@@ -33,5 +34,17 @@ exports.getTeacher = asyncHandler(async (req, res) => {
     title: `${teacher.username}'s profile`,
     teacher,
     exams
+  })
+})
+
+exports.getStudent = asyncHandler(async (req, res) => {
+  const submitions = await Submition.find({ student: req.user.id })
+    .select('-wrongAnswer -answers')
+    .populate('exam', 'topic')
+    .exec();
+
+  res.render('student_profile', {
+    title: `${req.user.username}'s profile`,
+    submitions
   })
 })
