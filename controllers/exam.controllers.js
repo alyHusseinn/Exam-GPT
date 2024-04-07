@@ -148,6 +148,8 @@ exports.exam_delete = asyncHandler(async (req, res, next) => {
   }
   try {
     await Exam.findByIdAndDelete(req.params.id)
+    // delete all that exam submitions
+    await Submition.deleteMany({ exam: req.params.id });
     res.redirect(req.user.url)
   } catch (err) {
     console.log(err)
