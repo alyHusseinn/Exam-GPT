@@ -13,7 +13,8 @@ router.get('/home', checkJWT, teacherControllers.getHomePage)
 router.get('/teacher/:id', checkJWT, teacherControllers.getTeacher)
 
 // Exam routes
-router.get('/exam/:id', checkJWT, examControllers.exam_get)
+router.get('/exam/:id', checkJWT, examControllers.exam_get);
+router.get('/submition/:id', checkJWT, examControllers.exam_results_get);
 
 // post a new exam
 router.post(
