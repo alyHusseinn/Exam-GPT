@@ -48,14 +48,27 @@ exports.exam_get = asyncHandler(async (req, res, next) => {
     return next(error)
   }
   if (req.user.role === 'student') {
+    // make sure that this student didn't already submit this exam
+    const submitions = await Submition.find({
+      exam: exam._id,
+      student: req.user.id
+    })
+    if (submitions.length > 0) {
+      return res.redirect(req.user.url)
+    }
     res.render('exam_form', {
       title: 'exam form',
       exam: exam
     })
   } else {
+    const examSubmitions = await Submition.find({ exam: exam._id })
+      .select('-answers -wrongAnswers')
+      .populate('student', '-password')
+      .exec()
     res.render('exam_view', {
       title: 'Exam',
-      exam: exam
+      exam: exam,
+      submitions: examSubmitions
     })
   }
 })
@@ -85,7 +98,7 @@ exports.exam_submit = asyncHandler(async (req, res, next) => {
   })
 
   try {
-    const newSubmition = await submition.save();
+    const newSubmition = await submition.save()
     await Exam.findByIdAndUpdate(req.params.id, {
       $push: { submitions: newSubmition._id }
     })

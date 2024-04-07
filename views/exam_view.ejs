@@ -40,6 +40,20 @@
       <% }) %>
       <% } %>
     </div>
+
+    <div class="flex flex-row flex-wrap justify-center items-center gap-4 w-full">
+      <h2 class="border-2 bg-secondary p-4 border-text border-solid rounded-md text-2xl">Enrolled Students: <%= submitions.length %></h2>
+      <div class="flex flex-row flex-wrap justify-center items-center content-center gap-8 px-6 lg:px-8 py-12 w-full min-h-full">
+        <% submitions.forEach(submition => { %>
+          <div class="flex flex-col justify-center items-center content-center gap-2 border-4 bg-secondary hover:shadow-2xl px-6 lg:px-8 py-12 border-text border-solid rounded-xl w-96 min-h-full hover:cursor-pointer">
+            <img src="<%= submition.student.avatar %>" alt="" class="rounded-xl w-40 h-40">
+            <h2 class="text-2xl name">Name: <%= submition.student.fullName %></h2>
+            <h2 class="text-2xl name">Score: <%= submition.score %></h2>
+            <a href="<%= submition.url %>" class="flex flex-row justify-between items-center bg-black p-4 rounded-3xl w-full font-bold text-3xl text-white hover:text-gray-200">View Submition!</a>
+          </div>
+        <% }) %>
+      </div>
+    </div>
   </div>
 </body>
 

@@ -38,7 +38,7 @@ function calculateJaccardSimilarity(text1, text2) {
 
 function checkAnswer(userAnswer, rightAnswer) {
   const similarity = calculateJaccardSimilarity(userAnswer, rightAnswer);
-  if (similarity > 0.4) {
+  if (similarity > 0.2) {
     return true;
   } else {
     return false;
