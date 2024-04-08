@@ -39,7 +39,7 @@ exports.getTeacher = asyncHandler(async (req, res) => {
 
 exports.getStudent = asyncHandler(async (req, res) => {
   const submitions = await Submition.find({ student: req.user.id })
-    .select('-wrongAnswer -answers')
+    .select('-wrongAnswers -answers')
     .populate('exam', 'topic')
     .exec();
 
