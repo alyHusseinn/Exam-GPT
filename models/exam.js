@@ -10,7 +10,7 @@ const examSchema = new Schema({
   },
   type: {
     type: String,
-    enum: ['essay', 'mcq'],
+    enum: ['essay', 'mcq', 'oral'],
     required: true
   },
   numberOfQuestions: {
