@@ -14,8 +14,8 @@ exports.exam_create = [
     .isInt({ min: 5, max: 40 })
     .withMessage('Number of questions must be between 5 and 40'),
   body('type')
-    .isIn(['mcq', 'essay'])
-    .withMessage("Type must be either 'mcq' or 'essay'"),
+    .isIn(['mcq', 'essay', 'oral'])
+    .withMessage("Type must be either 'mcq', 'essay' or 'oral'"),
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
@@ -58,7 +58,7 @@ exports.exam_get = asyncHandler(async (req, res, next) => {
     if (submitions.length > 0) {
       return res.redirect(req.user.url)
     }
-    res.render('exam_form', {
+    res.render(exam.type == 'oral' ? 'exam_oral_form' : 'exam_form', {
       title: 'exam form',
       exam: exam
     })
@@ -101,9 +101,6 @@ exports.exam_submit = asyncHandler(async (req, res, next) => {
 
   try {
     const newSubmition = await submition.save()
-    await Exam.findByIdAndUpdate(req.params.id, {
-      $push: { submitions: newSubmition._id }
-    })
     res.redirect(newSubmition.url)
   } catch (err) {
     console.log(err)
