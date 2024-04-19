@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('partials/head') %>
+</head>
+<body>
+    <%- include('partials/header') %>
+    <div class="flex flex-col justify-center bg-main px-6 lg:px-8 py-12 min-h-full">
+        <h2 class="mt-10 font-bold text-4xl text-center text-gray-900 leading-9 tracking-tight"><%= exam.topic %></h2>
+        <div class="flex flex-col gap-4 p-8">
+            <form onsubmit="submitForm(event)" class="flex flex-col justify-center gap-4">
+                    <% exam.essayQuestions.forEach((question, idx) => { %>
+                        <div class="flex flex-col justify-center gap-4 border-2 bg-secondary shadow-md p-4 border-text border-solid rounded-lg">
+                            <label for="question" class="text-2xl"><%= idx + 1 %>. <%= question.question %></label>
+                            <div class="flex flex-col gap-4">
+                                <button  type="button" id="recordButton<%= idx + 1 %>" class="bg-black p-2 rounded-3xl w-full font-bold text-2xl text-white hover:text-gray-200" onclick="toggleRecording(<%= idx + 1 %>)">
+                                Start Recording
+                                </button>
+                                <audio id="audioPlayer<%= idx + 1 %>" controls class="hidden bg-black p-4 rounded-3xl w-full font-bold text-2xl text-white hover:text-gray-200"></audio>
+                            </div>
+                        </div>
+                    <% }) %>
+                <button type="submit" class="bg-black p-4 rounded-3xl w-full font-bold text-3xl text-white hover:text-gray-200">Submit!</button>
+            </form>
+        </div>
+    </div>
+     <script src="/javascripts/oral-exam.js" ></script>
+</body>
+</html>
