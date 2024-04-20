@@ -38,8 +38,6 @@ function startRecording(index) {
             const audioPlayer = document.getElementById(`audioPlayer${index}`);
             audioPlayer.src = audioUrl;
             audioPlayer.style.display = 'block';
-            const downloadButton =document.getElementById(`downloadButton${index}`);
-            downloadButton.style.display = "block";
         };
 
         recordedChunks[index - 1] = [];
@@ -72,12 +70,25 @@ function downloadRecording(index) {
 
 function submitForm(event) {
     event.preventDefault();
+    // extract the :id of exam/id out of the url
+    const url = window.location.pathname;
+    const id = url.substring(url.lastIndexOf('/') + 1);
     const formData = new FormData(document.getElementById('voiceForm'));
+
     recordedChunks.forEach((chunk, index) => {
-        formData.append(`voice${index + 1}`, new Blob([chunk], { type: 'audio/wav' }));
+        formData.append('voice', new Blob([chunk], { type: 'audio/wav' }));
     });
 
-    fetch('/submit', {
+    // get the number of div in the form
+    const divCount = document.querySelectorAll('form > div').length;
+
+    // check if the number of div is equal to the number of recordedChunks
+    if (divCount !== recordedChunks.length) {
+        alert(`Please record all the questions before submitting. divCount: ${divCount}, recordedChunks.length: ${recordedChunks.length}`);
+        return;
+    }
+
+    fetch(`/oralexam/${id}/submit`, {
         method: 'POST',
         body: formData,
     })
@@ -86,8 +97,25 @@ function submitForm(event) {
             throw new Error('Network response was not ok');
         }
         console.log('Form data sent successfully');
+        // update the dom with success message
+        document.querySelector('form').style.display = 'none';
+        const successMessage = document.createElement('p');
+        successMessage.textContent = 'Form data sent successfully';
+        successMessage.style.color = 'green';
+        successMessage.style.textAlign = 'center';
+        successMessage.style.fontSize = '2rem';
+
+        document.body.appendChild(successMessage);
+        setTimeout(() => {
+            document.body.removeChild(successMessage);
+            window.location.href = '/home';
+        }, 3000);
     })
     .catch(error => {
         console.error('There was a problem with sending the form data:', error.message);
+        alert('There was a problem with sending the form data. Please try again later.');
+        setTimeout(() => {
+            window.location.href = '/home';
+        }, 3000);
     });
 }
