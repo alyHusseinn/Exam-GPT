@@ -1,6 +1,7 @@
 const examControllers = require('../controllers/exam.controllers')
 const userControllers = require('../controllers/user.controllers')
 const authControllers = require('../controllers/auth.controllers')
+const oralExamControllers = require('../controllers/oralExam.controllers');
 const checkJWT = require('../middlewares/checkJwt')
 const checkRole = require('../middlewares/checkRole')
 const router = require('express').Router()
@@ -31,6 +32,19 @@ router.post(
 )
 
 router.post('/exam/:id/delete', [checkJWT, checkRole('teacher')], examControllers.exam_delete)
+
+// Oral Exam routes
+// student submit the oral exam
+router.post('/oralexam/:id/submit', [checkJWT, checkRole('student')], oralExamControllers.oralExamSubmit);
+
+// get all the oral exams that needs to be corrected by the teacher
+router.get('/oralexams', [checkJWT, checkRole('teacher')], oralExamControllers.oralExamList);
+
+// get the oral exam correction form
+router.get('/oralexam/:id', [checkJWT, checkRole('teacher')], oralExamControllers.oralExamCorrection_form_get);
+
+// oral exam corrections form the teacher
+router.post('/oralexam/:id', [checkJWT, checkRole('teacher')], oralExamControllers.oralExamSubmitCorrection_post);
 
 // Auth routesd
 router.get('/signup', authControllers.signup_get)
