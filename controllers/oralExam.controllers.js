@@ -1,56 +1,64 @@
 const Exam = require('../models/exam')
 const Submition = require('../models/submition')
 const asyncHandler = require('express-async-handler')
-const { body, validationResult } = require('express-validator')
+// const { body, validationResult } = require('express-validator')
 const multer = require('multer')
 const cloudinary = require('cloudinary').v2
+const fs = require('fs')
+
+const upload = multer({ dest: 'uploads/' }) // Set destination folder if needed
+
 const {
   CLOUD_NAME,
   CLOUDINARY_KEY,
   CLOUDINARY_SECRET
 } = require('../config/env')
 
-// Configure Cloudinary
 cloudinary.config({
   cloud_name: CLOUD_NAME,
   api_key: CLOUDINARY_KEY,
   api_secret: CLOUDINARY_SECRET
 })
 
-// Configure Multer for file upload
-const upload = multer()
-
 // Handle submission of oral exam by student
 exports.oralExamSubmit = [
-  upload.array('records'),
+  upload.array('voice'),
   asyncHandler(async (req, res, next) => {
     try {
       // Upload voice recordings to Cloudinary and get the URLs
-      const urls = await Promise.all(
-        req.files.map(async (file) => {
-          const response = await cloudinary.uploader.upload(file.buffer, {
-            resource_type: 'auto'
+      const uploadPromises = req.files.map(async (file) => {
+        try {
+          const response = await cloudinary.uploader.upload(file.path, {
+            resource_type: 'video'
           })
           return response.url
-        })
-      )
-
-      // Create a new submission
-      const submition = new Submition({
-        exam: req.params.id,
-        student: req.user.id,
-        answers: urls
+        } catch (err) {
+          console.error('Error uploading file to Cloudinary:', err)
+          return null // Placeholder for failed uploads
+        } finally {
+          // Clean up temporary files
+          fs.unlinkSync(file.path)
+        }
       })
 
-      // Save the submission to the database
-      await submition.save()
+      const urls = await Promise.all(uploadPromises)
 
-      // Send success response
-      res.status(200).send('Success')
+      // Create a new submission if all uploads were successful
+      if (urls.every((url) => url !== null)) {
+        const submition = new Submition({
+          exam: req.params.id,
+          student: req.user.id,
+          answers: urls
+        })
+        await submition.save()
+        res.status(200).send('Success')
+      } else {
+        // Send error response if any upload failed
+        res.status(500).send('Error uploading files to Cloudinary')
+      }
     } catch (err) {
-      console.error(err)
-      // Send error response
-      res.status(500).send('Error')
+      console.error('Error processing submission:', err)
+      res.status(500).send('Error processing submission')
     }
   })
 ]
@@ -73,19 +81,19 @@ exports.oralExamList = asyncHandler(async (req, res, next) => {
 
 // oral exam corrections form the teacher
 
-exports.oralExamSubmitForm = asyncHandler(async (req, res, next) => {
+exports.oralExamCorrection_form_get = asyncHandler(async (req, res, next) => {
   const submission = await Submition.findById(req.params.id)
     .populate('exam student')
-    .exec();
+    .exec()
 
   res.render('oral_exam_correction_form', {
     title: 'Oral Exam Correction Form',
     submission
   })
-});
+})
 
 // POST: oral exam corrections
-exports.oralExamSubmitCorrection = asyncHandler(async (req, res, next) => {
+exports.oralExamSubmitCorrection_post = asyncHandler(async (req, res, next) => {
   const submition = await Submition.findById(req.params.id)
   submition.score = req.body.score
   submition.wrongAnswers = req.body.wrongAnswers
