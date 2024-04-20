@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <%- include('partials/head') %>
 </head>
+
 <body class="bg-main">
   <%- include('partials/header') %>
   <div class="flex flex-col justify-center items-center content-center gap-8 bg-main px-6 lg:px-8 py-12 w-full min-h-full">
@@ -22,9 +24,7 @@
           </div>
         </div>
         <div class="flex flex-row justify-between w-full teacher-info">
-          <form method="get" class="flex flex-row justify-between items-center bg-black p-4 rounded-3xl w-full font-bold text-3xl text-white hover:text-gray-200">
-            <button class="bg-black w-full text-2xl text-white" type="submit">Start Corrections!</button>
-            </a>
+          <a href="<%= 'oralexam/' + submition._id %>" class="bg-black p-4 rounded-3xl w-full font-bold text-3xl text-center text-white hover:text-gray-200">Start Correction</a>
         </div>
       </div>
       <% }) %>

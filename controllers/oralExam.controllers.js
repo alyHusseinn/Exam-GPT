@@ -107,13 +107,13 @@ exports.oralExamList = asyncHandler(async (req, res, next) => {
 // oral exam corrections form the teacher
 
 exports.oralExamCorrection_form_get = asyncHandler(async (req, res, next) => {
-  const submission = await Submition.findById(req.params.id)
+  const submition = await Submition.findById(req.params.id)
     .populate('exam student')
     .exec()
 
   res.render('oral_exam_correction_form', {
     title: 'Oral Exam Correction Form',
-    submission
+    submition
   })
 })
 
