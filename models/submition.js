@@ -23,7 +23,8 @@ const submitionSchema = new Schema({
     type: [Number]
   },
   score: {
-    type: Number
+    type: Number,
+    default: null
   }
 })
 
@@ -32,7 +33,8 @@ submitionSchema.virtual('url').get(function () {
 })
 
 submitionSchema.pre('save', async function (next) {
-  if(this.type === 'oral') return next();
+  const exam = await Exam.findById(this.exam, 'type')
+  if(exam.type === 'oral') return next();
   try {
     // When we submit an exam we need to calculate the score and put the wrong answers
     const exam = await Exam.findById(this.exam)

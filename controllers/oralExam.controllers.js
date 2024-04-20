@@ -5,6 +5,7 @@ const asyncHandler = require('express-async-handler')
 const multer = require('multer')
 const cloudinary = require('cloudinary').v2
 const fs = require('fs')
+const ObjectId = require('mongoose').Types.ObjectId
 
 const upload = multer({ dest: 'uploads/' }) // Set destination folder if needed
 
@@ -65,15 +66,39 @@ exports.oralExamSubmit = [
 
 // get all the oral exams that needs to be corrected by the teacher
 exports.oralExamList = asyncHandler(async (req, res, next) => {
-  const submitions = await Submition.find({
-    'exam.teacher': req.user.id,
-    score: { $exists: false }
-  })
-    .populate('exam', 'topic type numberOfQuestions')
-    .populate('student', 'name')
-    .exec()
+  const submitions = await Submition.aggregate([
+    {
+      $lookup: {
+        from: 'exams',
+        localField: 'exam',
+        foreignField: '_id',
+        as: 'exam'
+      }
+    },
+    {
+      $unwind: '$exam' // Unwind the exam array to get individual objects
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'student',
+        foreignField: '_id',
+        as: 'student'
+      }
+    },
+    {
+      $unwind: '$student' // Unwind the student array to get individual objects
+    },
+    {
+      $match: {
+        'exam.teacher': new ObjectId(req.user.id), // Assuming req.user.id contains the teacher's ID
+        'exam.type': 'oral',
+        score: null
+      }
+    }
+  ]).exec();
 
-  res.render('oral_exam_list', {
+  res.render('oral_exams_list', {
     title: 'Oral Exam List',
     submitions
   })
