@@ -96,7 +96,7 @@ exports.oralExamList = asyncHandler(async (req, res, next) => {
         score: null
       }
     }
-  ]).exec();
+  ]).exec()
 
   res.render('oral_exams_list', {
     title: 'Oral Exam List',
@@ -119,8 +119,33 @@ exports.oralExamCorrection_form_get = asyncHandler(async (req, res, next) => {
 
 // POST: oral exam corrections
 exports.oralExamSubmitCorrection_post = asyncHandler(async (req, res, next) => {
+  // we got in body an array of 'true' and 'false' values
+  // we shuold update the submition with the wrong answers and add his score
   const submition = await Submition.findById(req.params.id)
-  submition.score = req.body.score
-  submition.wrongAnswers = req.body.wrongAnswers
-  await submition.save()
+  const examCorrection = Object.values(req.body)
+  const WrongAnswers = []
+
+  examCorrection.forEach((answer, index) => {
+    if (answer === 'false') {
+      WrongAnswers.push(index)
+    }
+  })
+
+  const score =
+    ((examCorrection.length - WrongAnswers.length) / examCorrection.length) * 100
+
+  const update = new Submition({
+    _id: req.params.id,
+    exam: submition.exam,
+    student: submition.student,
+    answers: submition.answers,
+    wrongAnswers: WrongAnswers,
+    score
+  })
+  try {
+    await Submition.findByIdAndUpdate(req.params.id, update)
+  } catch (err) {
+    console.log(err)
+  }
+  res.redirect('/oralexams');
 })

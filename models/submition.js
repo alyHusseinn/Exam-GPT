@@ -33,11 +33,11 @@ submitionSchema.virtual('url').get(function () {
 })
 
 submitionSchema.pre('save', async function (next) {
-  const exam = await Exam.findById(this.exam, 'type')
-  if(exam.type === 'oral') return next();
+  const exam = await Exam.findById(this.exam)
+  if (exam.type === 'oral') return next()
+
   try {
     // When we submit an exam we need to calculate the score and put the wrong answers
-    const exam = await Exam.findById(this.exam)
     if (!exam) {
       throw new Error('Exam not found')
     }
@@ -49,7 +49,8 @@ submitionSchema.pre('save', async function (next) {
 
     this.wrongAnswers = getWrongAnswers(exam.type, rightAnswers, this.answers)
     this.score =
-      ((rightAnswers.length - this.wrongAnswers.length) / rightAnswers.length) * 100
+      ((rightAnswers.length - this.wrongAnswers.length) / rightAnswers.length) *
+      100
     next() // Call next to proceed with the save operation
   } catch (error) {
     next(error) // Pass any errors to the next middleware
