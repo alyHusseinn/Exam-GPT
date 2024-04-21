@@ -68,7 +68,6 @@ examSchema.pre('save', async function (next) {
       )
       if (generatedQuestions && generatedQuestions.questions) {
         this.mcqQuestions = generatedQuestions.questions
-        console.log(this.mcqQuestions)
       } else {
         throw new Error('No MCQ questions generated')
       }
@@ -80,7 +79,6 @@ examSchema.pre('save', async function (next) {
       )
       if (generatedQuestions && generatedQuestions.questions) {
         this.essayQuestions = generatedQuestions.questions
-        console.log(this.essayQuestions)
       } else {
         throw new Error('No essay questions generated')
       }

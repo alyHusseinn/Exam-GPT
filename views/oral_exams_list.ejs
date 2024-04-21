@@ -11,24 +11,15 @@
     <h1 class="font-bold text-5xl text-gray-900 leading-9 tracking-tight">All Exams: </h1>
     <div class="flex flex-row flex-wrap justify-center items-center content-center gap-8 px-6 lg:px-8 py-12 w-full min-h-full">
       <% submitions.forEach(submition => { %>
-      <div class="flex flex-col justify-center items-center content-center gap-2 border-4 bg-secondary hover:shadow-2xl px-6 lg:px-8 py-12 border-text border-solid rounded-xl w-96 min-h-full hover:cursor-pointer">
-        <div class="flex flex-row justify-between w-full teacher-info">
-          <h2 class="topic text-3xl">Topic: <%= submition.exam.topic %></h2>
-        </div>
-        <div class="flex flex-col justify-center items-center content-center gap-2 px-6 lg:px-8 py-12 w-full min-h-full">
-          <div class="flex flex-row justify-between w-full teacher-info">
-            <h2 class="text-2xl name">Student: <%= submition.student.firstName + ' ' + submition.student.lastName %></h2>
-          </div>
-          <div class="flex flex-row justify-between w-full teacher-info">
-            <h2 class="text-2xl name">Number: <%= submition.exam.numberOfQuestions %></h2>
-          </div>
-        </div>
-        <div class="flex flex-row justify-between w-full teacher-info">
-          <a href="<%= 'oralexam/' + submition._id %>" class="bg-black p-4 rounded-3xl w-full font-bold text-3xl text-center text-white hover:text-gray-200">Start Correction</a>
-        </div>
+      <div class="flex flex-col justify-center items-center content-center gap-4 border-4 bg-secondary hover:shadow-2xl px-6 lg:px-8 py-12 border-text border-solid rounded-xl w-96 min-h-full hover:cursor-pointer">
+        <h2 class="topic text-3xl">Student: <%= submition.student.firstName + ' ' + submition.student.lastName %></h2>
+          <h2 class="text-2xl name">Topic: <%= submition.exam.topic %></h2>
+          <img src="<%= submition.student.avatar %>" alt="" class="rounded-xl w-40 h-40">
+        <a href="<%= 'oralexam/' + submition._id %>" class="bg-black p-4 rounded-3xl w-full font-bold text-3xl text-center text-white hover:text-gray-200">Start Correction</a>
       </div>
       <% }) %>
     </div>
   </div>
 </body>
+
 </html>

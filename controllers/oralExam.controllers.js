@@ -147,5 +147,5 @@ exports.oralExamSubmitCorrection_post = asyncHandler(async (req, res, next) => {
   } catch (err) {
     console.log(err)
   }
-  res.redirect('/oralexams');
+  res.redirect(submition.url);
 })
