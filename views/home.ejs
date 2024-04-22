@@ -63,8 +63,8 @@
               <input
                 id="questions_number"
                 name="questions_number"
+                min="1"
                 type="number"
-                min="5"
                 required
                 class="block border-0 bg-secondary shadow-md p-1.5 rounded-md w-full text-gray-900 sm:text-sm sm:leading-6 ring-1 ring-gray-300 ring-inset focus:ring-2 focus:ring-inset"
               />
@@ -109,7 +109,7 @@
         <% if(typeof errors !== 'undefined') { %>
         <ul>
           <% errors.forEach(error => { %>
-          <li class="text-red-500"><%= error.msg %></li>
+          <li class="font-bold text-red"><%= error.msg %></li>
           <% }) %>
         </ul>
         <% } %>

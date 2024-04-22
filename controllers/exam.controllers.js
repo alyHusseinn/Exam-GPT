@@ -11,8 +11,8 @@ exports.exam_create = [
   body('questions_number')
     .isNumeric()
     .withMessage('Number of questions must be a number')
-    .isInt({ min: 5, max: 40 })
-    .withMessage('Number of questions must be between 5 and 40'),
+    .isInt({ min: 1, max: 40 })
+    .withMessage('Number of questions must be between 1 and 40'),
   body('type')
     .isIn(['mcq', 'essay', 'oral'])
     .withMessage("Type must be either 'mcq', 'essay' or 'oral'"),
@@ -36,6 +36,12 @@ exports.exam_create = [
         res.redirect(newExam.url)
       } catch (err) {
         console.log(err)
+        res.render('home', {
+          title: 'Exam Form',
+          errors: [
+            { msg: 'Error while creating exam from OpenAi please try again' }
+          ]
+        })
       }
     }
   })
@@ -146,7 +152,7 @@ exports.exam_delete = asyncHandler(async (req, res, next) => {
   try {
     await Exam.findByIdAndDelete(req.params.id)
     // delete all that exam submitions
-    await Submition.deleteMany({ exam: req.params.id });
+    await Submition.deleteMany({ exam: req.params.id })
     res.redirect(req.user.url)
   } catch (err) {
     console.log(err)
