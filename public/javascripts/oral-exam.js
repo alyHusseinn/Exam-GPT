@@ -9,17 +9,21 @@ function toggleRecording(index) {
         mediaRecorders[index - 1].stop();
         button.innerText = `Start Recording`;
         button.dataset.recording = 'false';
+        button.style = 'background-color: black';
     } else {
         mediaRecorders.forEach((recorder, idx) => {
             if(idx !== index - 1) {
                 recorder.stop();
                 document.getElementById(`recordButton${idx + 1}`).dataset.recording = 'false';
                 document.getElementById(`recordButton${idx + 1}`).innerText = `Start Recording`;
+                document.getElementById(`recordButton${idx + 1}`).style = 'background-color: black';
             }
         });
         startRecording(index);
         button.innerText = 'Stop Recording';
         button.dataset.recording = 'true';
+        button.style = 'background-color: green';
+        document.getElementById(`audioPlayer${index}`).style.display = 'none';
     }
 }
 
