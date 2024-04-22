@@ -1,6 +1,18 @@
 const mongoose = require('mongoose')
 const Exam = require('./exam')
 const getWrongAnswers = require('../Ai/getWrongAnswers')
+const cloudinary = require('cloudinary').v2
+const {
+  CLOUD_NAME,
+  CLOUDINARY_KEY,
+  CLOUDINARY_SECRET
+} = require('../config/env')
+
+cloudinary.config({
+  cloud_name: CLOUD_NAME,
+  api_key: CLOUDINARY_KEY,
+  api_secret: CLOUDINARY_SECRET
+})
 
 const Schema = mongoose.Schema
 
@@ -54,6 +66,21 @@ submitionSchema.pre('save', async function (next) {
     next() // Call next to proceed with the save operation
   } catch (error) {
     next(error) // Pass any errors to the next middleware
+  }
+})
+
+submitionSchema.pre('remove', async function (next) {
+  // remove the audios from cloudinary
+  try {
+    const urls = this.answers
+    await cloudinary.api.delete_resources(urls, {
+      resource_type: 'video'
+    })
+
+    next()
+  } catch (error) {
+    console.log('Error While removing audios from cloudinary', error)
+    next(error)
   }
 })
 
