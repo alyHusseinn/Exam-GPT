@@ -11,7 +11,7 @@
     <h2 class="mt-10 font-bold text-4xl text-center text-gray-900 leading-9 tracking-tight">Topic: <%= submition.exam.topic %></h2>
     <h2 class="mt-10 font-bold text-4xl text-center text-gray-900 leading-9 tracking-tight">Student: <%= submition.student.fullName %></h2>
     <div class="flex flex-col gap-4 p-8">
-      <form class="flex flex-col justify-center gap-4" method="POST">
+      <form class="flex flex-col justify-center gap-4 exam-form" method="POST">
         <% submition.exam.essayQuestions.forEach((question, idx) => { %>
         <div class="flex flex-col justify-center gap-4 border-2 bg-secondary shadow-md p-4 border-text border-solid rounded-lg">
           <label for="question" class="text-2xl"><%= idx + 1 %>. <%= question.question %></label>
@@ -40,6 +40,7 @@
       </form>
     </div>
   </div>
+  <script src="/javascripts/disable-form-after-submission.js"></script>
 </body>
 
 </html>

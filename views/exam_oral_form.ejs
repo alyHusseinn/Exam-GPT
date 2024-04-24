@@ -8,7 +8,7 @@
     <div class="flex flex-col justify-center bg-main px-6 lg:px-8 py-12 min-h-full">
         <h2 class="mt-10 font-bold text-4xl text-center text-gray-900 leading-9 tracking-tight"><%= exam.topic %></h2>
         <div class="flex flex-col gap-4 p-8">
-            <form onsubmit="submitForm(event)" class="flex flex-col justify-center gap-4" id="voiceForm">
+            <form onsubmit="submitForm(event)" class="flex flex-col justify-center gap-4 exam-form" id="voiceForm">
                     <% exam.essayQuestions.forEach((question, idx) => { %>
                         <div class="flex flex-col justify-center gap-4 border-2 bg-secondary shadow-md p-4 border-text border-solid rounded-lg">
                             <label for="question" class="text-2xl"><%= idx + 1 %>. <%= question.question %></label>
