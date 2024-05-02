@@ -1,4 +1,5 @@
 ## Exam GPT Web Application
+Exam GPT is designed to simplify the process of creating, managing, and conducting exams for teachers and students. The application leverages advanced technologies, including the OpenAI API, to enhance the exam generation and evaluation processes.
 
 ### Teacher's Workflow:
 1. **Login/Register:** Teachers can create accounts or log in.
