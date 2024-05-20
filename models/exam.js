@@ -17,6 +17,12 @@ const examSchema = new Schema({
     type: Number,
     required: true
   },
+  duration: {
+    type: Number,
+    required: true,
+    min: [2, 'Time must be at least 10 minutes'],
+    max: [60, 'Time must be at most 60 minutes'],
+  },
   teacher: {
     type: Schema.Types.ObjectId,
     ref: 'User',
@@ -28,27 +34,15 @@ const examSchema = new Schema({
   },
   essayQuestions: [
     {
-      question: {
-        type: String
-      },
-      answer: {
-        type: String
-      }
+      question: String,
+      answer: String
     }
   ],
   mcqQuestions: [
     {
-      question: {
-        type: String
-      },
-      choices: [
-        {
-          type: String
-        }
-      ],
-      answer: {
-        type: Number
-      }
+      question: String,
+      choices: [String],
+      answer: Number
     }
   ]
 })
