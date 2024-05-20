@@ -16,6 +16,13 @@ exports.exam_create = [
   body('type')
     .isIn(['mcq', 'essay', 'oral'])
     .withMessage("Type must be either 'mcq', 'essay' or 'oral'"),
+  body('duration')
+    .isNumeric()
+    .withMessage('Duration must be a number')
+    .isInt({ min: 2, max: 60 })
+    .withMessage('Duration must be between 5 and 60 minutes'),
+
+    
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
@@ -24,10 +31,11 @@ exports.exam_create = [
         errors: errors.array()
       })
     } else {
-      const { topic, type, questions_number } = req.body
+      const { topic, type, questions_number, duration } = req.body
       const exam = new Exam({
         topic,
         type,
+        duration,
         numberOfQuestions: questions_number,
         teacher: req.user.id // get from the cookie middlewared
       })
@@ -47,6 +55,8 @@ exports.exam_create = [
   })
 ]
 
+// when get the exam add a new empty submition with that user and the data of starting the exam
+// in order to compare the calc the time taken by the user to complete the exam
 exports.exam_get = asyncHandler(async (req, res, next) => {
   const exam = await Exam.findById(req.params.id).exec()
 
@@ -64,6 +74,16 @@ exports.exam_get = asyncHandler(async (req, res, next) => {
     if (submitions.length > 0) {
       return res.redirect(req.user.url)
     }
+
+    // create a empty submition just to indicate that the student has recieved the exam
+    const submition = new Submition({
+      exam: exam._id,
+      student: req.user.id,
+      startTime: Date.now()
+    })
+
+    await submition.save()
+
     res.render(exam.type == 'oral' ? 'exam_oral_form' : 'exam_form', {
       title: 'exam form',
       exam: exam
@@ -88,25 +108,31 @@ exports.exam_submit = asyncHandler(async (req, res, next) => {
   const exam = await Exam.findById(req.params.id)
 
   // check if the user has submit the exam before submitting
-  const submitions = await Submition.find({
+  const submition = await Submition.findOne({
     exam: exam._id,
     student: req.user.id
   })
-  if (submitions.length > 0) {
+  if (submition.answers) {
     return res.redirect(exam.url)
   }
 
-  const answers = Object.values(req.body)
+  // const answers = Object.values(req.body)
 
   // update the schema with that information
-  const submition = new Submition({
-    exam: exam._id,
+  const updatedSubmition = new Submition({
+    _id: submition._id,
+    exam: req.params.id,
     student: req.user.id,
-    answers
+    startTime: submition.startTime,
+    endTime: Date.now(),
+    answers: req.body
   })
 
   try {
-    const newSubmition = await submition.save()
+    const newSubmition = await Submition.findByIdAndUpdate(
+      submition._id,
+      updatedSubmition
+    )
     res.redirect(newSubmition.url)
   } catch (err) {
     console.log(err)
