@@ -22,7 +22,6 @@ exports.exam_create = [
     .isInt({ min: 2, max: 60 })
     .withMessage('Duration must be between 5 and 60 minutes'),
 
-    
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
@@ -67,26 +66,46 @@ exports.exam_get = asyncHandler(async (req, res, next) => {
   }
   if (req.user.role === 'student') {
     // make sure that this student didn't already submit this exam
-    const submitions = await Submition.find({
+    const submition = await Submition.findOne({
       exam: exam._id,
       student: req.user.id
     })
-    if (submitions.length > 0) {
-      return res.redirect(req.user.url)
+
+    let availableTime = exam.duration + ':00'
+
+    // Check if the user has already submitted the exam or exceeded the time limit
+    if (submition) {
+      const currentTime = Date.now()
+      const examStartTime = new Date(submition.startTime).getTime()
+      const examDuration = exam.duration * 60 * 1000 // Convert exam duration to milliseconds
+
+      // Calculate the available time in the format mm:ss
+      const elapsedTime = currentTime - examStartTime
+      const reminingTime = examDuration - elapsedTime
+      const minutes = Math.floor((reminingTime % (1000 * 60 * 60)) / (1000 * 60))
+      const seconds = Math.floor((reminingTime % (1000 * 60)) / 1000)
+      availableTime = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
+
+      console.log(`Available Time: ${availableTime}`) // Log the available time
+
+      if (reminingTime <= 0 || submition.answers) {
+        return res.redirect(submition.url)
+      }
     }
 
     // create a empty submition just to indicate that the student has recieved the exam
-    const submition = new Submition({
+    const newSubmition = new Submition({
       exam: exam._id,
       student: req.user.id,
       startTime: Date.now()
     })
 
-    await submition.save()
+    await newSubmition.save()
 
     res.render(exam.type == 'oral' ? 'exam_oral_form' : 'exam_form', {
       title: 'exam form',
-      exam: exam
+      exam: exam,
+      availableTime
     })
   } else {
     const examSubmitions = await Submition.find({ exam: exam._id })
