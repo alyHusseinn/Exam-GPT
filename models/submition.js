@@ -35,7 +35,7 @@ const submitionSchema = new Schema({
     type: Date,
   },
   answers: {
-    type: [String],
+    type: {},
     // required: true
   },
   wrongAnswers: {
