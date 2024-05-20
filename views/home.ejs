@@ -71,6 +71,27 @@
             </div>
           </div>
 
+          <!--duration-->
+          <div>
+            <div class="flex justify-between items-center">
+              <label
+                for="duration"
+                class="block font-medium text-gray-900 text-sm leading-6"
+                >Duration</label
+              >
+            </div>
+            <div class="mt-2">
+              <input
+                id="duration"
+                name="duration"
+                type="number"
+                min="2"
+                required
+                class="block border-0 bg-secondary shadow-md p-1.5 rounded-md w-full text-gray-900 sm:text-sm sm:leading-6 ring-1 ring-gray-300 ring-inset focus:ring-2 focus:ring-inset"
+              />
+            </div>
+          </div>
+
           <div class="mb-6">
             <div class="flex justify-between items-center">
               <label
@@ -116,6 +137,6 @@
       </div>
       <% } %>
     </div>
-    <script src="/javascripts/disable-form-after-submission.js"></script>
+    <script src="/javascripts/form-handler.js"></script>
   </body>
 </html>

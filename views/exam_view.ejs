@@ -12,6 +12,7 @@
       <h2 class="border-2 bg-secondary p-4 border-text border-solid rounded-md text-2xl">Topic: <%= exam.topic %></h2>
       <h2 class="border-2 bg-secondary p-4 border-text border-solid rounded-md text-2xl">Type: <%= exam.type %></h2>
       <h2 class="border-2 bg-secondary p-4 border-text border-solid rounded-md text-2xl">Number of Questions: <%= exam.numberOfQuestions %></h2>
+      <h2 class="border-2 bg-secondary p-4 border-text border-solid rounded-md text-2xl">Duration: <%= exam.duration %></h2>
       <form action="<%= exam.url %>/delete" method="POST" >
         <button type="submit" class="bg-red hover:bg-rose-900 p-4 rounded-md w-full font-bold text-2xl text-white hover:text-gray-200">Delete</button>
       </form>
