@@ -4,7 +4,7 @@ const checkAnswer = require("./checkAnswer");
 function getWrongAnswerIndecesForEssay(rightAnswers, userAnswers) {
   const wrongAnswerIndeces = [];
   for (let i = 0; i < rightAnswers.length; i++) {
-    if (!checkAnswer(userAnswers[i], rightAnswers[i])) {
+    if (!userAnswers[i] || !checkAnswer(userAnswers[i], rightAnswers[i])) {
       wrongAnswerIndeces.push(i);
     }
   }
@@ -15,7 +15,7 @@ function getWrongAnswerIndecesForEssay(rightAnswers, userAnswers) {
 function getWrongAnswerIndecesForMcq(rightAnswers, userAnswers) {
   const wrongAnswerIndeces = [];
   for (let i = 0; i < rightAnswers.length; i++) {
-    if (userAnswers[i] != rightAnswers[i]) {
+    if (!userAnswers[i] || userAnswers[i] != rightAnswers[i]) {
       wrongAnswerIndeces.push(i);
     }
   }
