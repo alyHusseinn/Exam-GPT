@@ -23,10 +23,29 @@ cloudinary.config({
 
 // Handle submission of oral exam by student
 exports.oralExamSubmit = [
-  upload.array('voice'),
+  upload.array('voices'),
   asyncHandler(async (req, res, next) => {
+    const exam = await Exam.findById(req.params.id)
+    console.log(req.body)
+    const submition = await Submition.findOne({
+      exam: req.params.id,
+      student: req.user.id
+    })
+
+    if (!exam) {
+      const error = new Error('Exam not found')
+      error.status = 404
+      return next(error)
+    }
+
+    if (submition && submition.answers && submition.answers.length > 0) {
+      return res.redirect('/oral-exam/' + req.params.id)
+    }
     try {
       // Upload voice recordings to Cloudinary and get the URLs
+      const voiceIndexes = req.body.voiceIndexes
+      const tempUrl =
+        'https://us-tuna-sounds-files.voicemod.net/1b25f6c5-45a8-4124-b0fc-2cd6585d08fe-1690339881517.mp3'
       const uploadPromises = req.files.map(async (file) => {
         try {
           const response = await cloudinary.uploader.upload(file.path, {
@@ -35,28 +54,28 @@ exports.oralExamSubmit = [
           return response.url
         } catch (err) {
           console.error('Error uploading file to Cloudinary:', err)
-          return null // Placeholder for failed uploads
+          return tempUrl // Placeholder for failed uploads
         } finally {
           // Clean up temporary files
           fs.unlinkSync(file.path)
         }
       })
 
-      const urls = await Promise.all(uploadPromises)
+      let urls = await Promise.all(uploadPromises)
+      // Create a new answers array with the correct index mapping
+      const answers = Array(exam.numberOfQuestions).fill(tempUrl)
+      voiceIndexes.forEach((index, i) => {
+        answers[index] = urls[i]
+      })
 
-      // Create a new submission if all uploads were successful
-      if (urls.every((url) => url !== null)) {
-        const submition = new Submition({
-          exam: req.params.id,
-          student: req.user.id,
-          answers: urls
-        })
-        await submition.save()
-        res.status(200).send('Success')
-      } else {
-        // Send error response if any upload failed
-        res.status(500).send('Error uploading files to Cloudinary')
+      const updatedSubmition = {
+        _id: submition._id,
+        answers,
+        endTime: Date.now()
       }
+
+      await Submition.findByIdAndUpdate(submition._id, updatedSubmition)
+      res.status(200).send('Success')
     } catch (err) {
       console.error('Error processing submission:', err)
       res.status(500).send('Error processing submission')
@@ -132,7 +151,8 @@ exports.oralExamSubmitCorrection_post = asyncHandler(async (req, res, next) => {
   })
 
   const score =
-    ((examCorrection.length - WrongAnswers.length) / examCorrection.length) * 100
+    ((examCorrection.length - WrongAnswers.length) / examCorrection.length) *
+    100
 
   const update = new Submition({
     _id: req.params.id,
@@ -147,5 +167,5 @@ exports.oralExamSubmitCorrection_post = asyncHandler(async (req, res, next) => {
   } catch (err) {
     console.log(err)
   }
-  res.redirect(submition.url);
+  res.redirect(submition.url)
 })

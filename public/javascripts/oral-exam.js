@@ -3,19 +3,50 @@ let recordedChunks = []
 
 const form = document.querySelector('.exam-form')
 
-const submitted = false
+let submitted = false
 const submitButton = document.querySelector(
   `.exam-form > button[type="submit"]`
 )
 
 form.addEventListener('submit', (e) => {
-  const divCount = document.querySelectorAll('form > div').length
-  if (!submitted && recordedChunks.length == divCount) {
+  if (!submitted) {
     submitButton.disabled = true
     submitButton.innerText = 'sending...'
     submitted = true
   }
 })
+
+// Make a timer and submit the form after it reaches 0
+const durationElement = document.getElementById('duration')
+
+function startTimer(duration, display) {
+  let timer = duration,
+    minutes,
+    seconds
+
+  const intervalId = setInterval(function () {
+    minutes = parseInt(timer / 60, 10)
+    seconds = parseInt(timer % 60, 10)
+
+    minutes = minutes < 10 ? '0' + minutes : minutes
+    seconds = seconds < 10 ? '0' + seconds : seconds
+
+    display.textContent = minutes + ':' + seconds
+
+    if (--timer < 0) {
+      clearInterval(intervalId)
+      submitButton.click()
+    }
+  }, 1000)
+}
+
+// Assuming the initial duration is in the format "mm:ss"
+const initialDuration = durationElement.textContent.split(':')
+const durationInSeconds =
+  parseInt(initialDuration[0], 10) * 60 + parseInt(initialDuration[1], 10)
+
+startTimer(durationInSeconds, durationElement)
+
 function toggleRecording(index) {
   const button = document.getElementById(`recordButton${index}`)
   const isRecording = button.dataset.recording === 'true'
@@ -101,19 +132,22 @@ function submitForm(event) {
   const formData = new FormData(document.getElementById('voiceForm'))
 
   recordedChunks.forEach((chunk, index) => {
-    formData.append('voice', new Blob([chunk], { type: 'audio/wav' }))
+    formData.append('voices', new Blob([chunk], { type: 'audio/wav' }))
+    formData.append('voiceIndexes', index)
   })
 
   // get the number of div in the form
-  const divCount = document.querySelectorAll('form > div').length
+  // const divCount = document.querySelectorAll('form > div').length
 
-  // check if the number of div is equal to the number of recordedChunks
-  if (divCount !== recordedChunks.length) {
-    alert(
-      `Please record all the questions before submitting. divCount: ${divCount}, recordedChunks.length: ${recordedChunks.length}`
-    )
-    return
-  }
+//   const formDataEntries = Object.fromEntries(formData.entries());
+
+// const formDataObject = {};
+// for (const [key, value] of Object.entries(formDataEntries)) {
+//   formDataObject[key] = value;
+// }
+
+// console.log(formDataObject);
+
 
   fetch(`/oralexam/${id}/submit`, {
     method: 'POST',
@@ -124,17 +158,7 @@ function submitForm(event) {
         throw new Error('Network response was not ok')
       }
       console.log('Form data sent successfully')
-      // update the dom with success message
-      document.querySelector('form').style.display = 'none'
-      const successMessage = document.createElement('p')
-      successMessage.textContent = 'Form data sent successfully'
-      successMessage.style.color = 'green'
-      successMessage.style.textAlign = 'center'
-      successMessage.style.fontSize = '2rem'
-
-      document.body.appendChild(successMessage)
       setTimeout(() => {
-        document.body.removeChild(successMessage)
         window.location.href = '/home'
       }, 3000)
     })

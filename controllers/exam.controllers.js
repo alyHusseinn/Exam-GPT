@@ -71,7 +71,8 @@ exports.exam_get = asyncHandler(async (req, res, next) => {
       student: req.user.id
     })
 
-    let availableTime = exam.duration + ':00'
+    let availableTime =
+      `${exam.duration < 10 ? '0' : ''}${exam.duration}` + ':00'
 
     // Check if the user has already submitted the exam or exceeded the time limit
     if (submition) {
@@ -82,25 +83,25 @@ exports.exam_get = asyncHandler(async (req, res, next) => {
       // Calculate the available time in the format mm:ss
       const elapsedTime = currentTime - examStartTime
       const reminingTime = examDuration - elapsedTime
-      const minutes = Math.floor((reminingTime % (1000 * 60 * 60)) / (1000 * 60))
+      const minutes = Math.floor(
+        (reminingTime % (1000 * 60 * 60)) / (1000 * 60)
+      )
       const seconds = Math.floor((reminingTime % (1000 * 60)) / 1000)
-      availableTime = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
+      availableTime = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
 
       console.log(`Available Time: ${availableTime}`) // Log the available time
 
       if (reminingTime <= 0 || submition.answers) {
         return res.redirect(submition.url)
       }
+    } else {
+      const newSubmition = new Submition({
+        exam: exam._id,
+        student: req.user.id,
+        startTime: Date.now()
+      })
+      await newSubmition.save()
     }
-
-    // create a empty submition just to indicate that the student has recieved the exam
-    const newSubmition = new Submition({
-      exam: exam._id,
-      student: req.user.id,
-      startTime: Date.now()
-    })
-
-    await newSubmition.save()
 
     res.render(exam.type == 'oral' ? 'exam_oral_form' : 'exam_form', {
       title: 'exam form',
@@ -135,22 +136,18 @@ exports.exam_submit = asyncHandler(async (req, res, next) => {
     return res.redirect(exam.url)
   }
 
-  // const answers = Object.values(req.body)
-
   // update the schema with that information
-  const updatedSubmition = new Submition({
+  const updatedSubmition = {
     _id: submition._id,
-    exam: req.params.id,
-    student: req.user.id,
-    startTime: submition.startTime,
     endTime: Date.now(),
     answers: req.body
-  })
+  }
 
   try {
     const newSubmition = await Submition.findByIdAndUpdate(
       submition._id,
-      updatedSubmition
+      updatedSubmition,
+      { new: true }
     )
     res.redirect(newSubmition.url)
   } catch (err) {
