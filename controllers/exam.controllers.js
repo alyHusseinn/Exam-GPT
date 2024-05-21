@@ -90,7 +90,11 @@ exports.exam_get = asyncHandler(async (req, res, next) => {
       availableTime = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`
 
       console.log(`Available Time: ${availableTime}`) // Log the available time
-
+      // when the user exceeds the time limit and did not submit the answers
+      if(reminingTime <= 0 && !submition.answers) {
+        console.log('You have exceeded the time limit. Please try again later.')
+        return res.redirect('/home')
+      }
       if (reminingTime <= 0 || submition.answers) {
         return res.redirect(submition.url)
       }
@@ -109,10 +113,13 @@ exports.exam_get = asyncHandler(async (req, res, next) => {
       availableTime
     })
   } else {
-    const examSubmitions = await Submition.find({ exam: exam._id })
+    // show submitions that has answers and didn't exceed the time limit
+    const examSubmitions = await Submition.find({ exam: exam._id, answers: { $ne: null } })
       .select('-answers -wrongAnswers')
       .populate('student', '-password')
       .exec()
+      
+      // examSubmitions.sort((a, b) => b.startTime - a.startTime)
     res.render('exam_view', {
       title: 'Exam',
       exam: exam,
