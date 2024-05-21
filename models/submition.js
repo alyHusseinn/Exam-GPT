@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
-const Exam = require('./exam')
 const getWrongAnswers = require('../Ai/getWrongAnswers')
 const cloudinary = require('cloudinary').v2
+
 const {
   CLOUD_NAME,
   CLOUDINARY_KEY,
@@ -64,7 +64,7 @@ submitionSchema.pre('findOneAndUpdate', async function(next) {
     }
 
     // Find the associated exam
-    const exam = await Exam.findById(submition.exam);
+    const exam = await mongoose.model('Exam').findById(submition.exam);
 
     if (!exam) {
       return next(new Error('Exam not found'));

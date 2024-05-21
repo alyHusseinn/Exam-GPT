@@ -136,19 +136,6 @@ function submitForm(event) {
     formData.append('voiceIndexes', index)
   })
 
-  // get the number of div in the form
-  // const divCount = document.querySelectorAll('form > div').length
-
-//   const formDataEntries = Object.fromEntries(formData.entries());
-
-// const formDataObject = {};
-// for (const [key, value] of Object.entries(formDataEntries)) {
-//   formDataObject[key] = value;
-// }
-
-// console.log(formDataObject);
-
-
   fetch(`/oralexam/${id}/submit`, {
     method: 'POST',
     body: formData

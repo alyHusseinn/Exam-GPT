@@ -43,7 +43,7 @@ exports.oralExamSubmit = [
     }
     try {
       // Upload voice recordings to Cloudinary and get the URLs
-      const voiceIndexes = req.body.voiceIndexes
+      const voiceIndexes = req.body.voiceIndexes.length > 1 ? req.body.voiceIndexes : [req.body.voiceIndexes]
       const tempUrl =
         'https://us-tuna-sounds-files.voicemod.net/1b25f6c5-45a8-4124-b0fc-2cd6585d08fe-1690339881517.mp3'
       const uploadPromises = req.files.map(async (file) => {
