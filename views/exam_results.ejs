@@ -27,14 +27,14 @@
             <p class="text-2xl"><%= question.answer + 1 + '. ' + question.choices[question.answer] %></p>
           </div>
           <div class="border-2 bg-main p-2 border-text border-solid rounded-lg your-answer">
-            <h4 class="text-red text-xl">Your Answer:</h4>
+            <h4 class="text-red text-xl"><%= locals.user.role == 'student' ? 'Your Answer:' : 'Student Answer:' %></h4>
             <p class="text-2xl"><%= submition?.answers ? +submition.answers[idx] + 1 + '. ' + question.choices[submition.answers[idx]] : 'Not Answered' %></p>
           </div>
         </div>
         <% } else { %>
         <div class="flex flex-col gap-4 text-xl">
           <div class="border-2 bg-main p-2 border-text border-solid rounded-lg correct-answer">
-            <h4 class="text-green text-xl">Your Answer:</h4>
+            <h4 class="text-green text-xl"><%= locals.user.role == 'student' ? 'Your Answer:' : 'Student Answer:' %></h4>
             <p class="text-2xl"><%= question.answer+ 1 + '. ' + question.choices[question.answer] %></p>
           </div>
         </div>

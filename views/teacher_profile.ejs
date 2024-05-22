@@ -10,16 +10,22 @@
 
   <div class="flex flex-col justify-center items-center content-center gap-8 bg-main px-6 lg:px-8 py-12 w-full min-h-full">
     <div class="flex flex-row flex-wrap justify-center items-center content-center gap-8 w-full teacher-info">
-      <h2 class="text-4xl name">Teacher: <%= teacher.fullName %> </h2>
       <img src="<%= teacher.avatar %>" alt="avatar" class="rounded-xl w-40 h-40" />
+      <h2 class="font-bold text-4xl text-center name">Teacher: <%= teacher.fullName %> </h2>
+      <% if (locals.user.role === 'admin') { %>
+      <form action="/user/<%= teacher._id %>/delete" method="POST">
+        <input type="submit" value="Delete Teacher" class="bg-red p-6 rounded-2xl font-bold text-3xl text-center text-white hover:text-gray-200 cursor-pointer" />
+      </form>
+      <% } %>
     </div>
+    <!----Delete button for the teacher done by the admin-->
 
-    <h1 class="font-bold text-5xl text-gray-900 leading-9 tracking-tight">All Exams: </h1>
-        <!-------button to oral exams list that needs to be corrected by the teacher-------->
+    <h1 class="font-bold text-4xl text-center text-gray-900 leading-9 tracking-tight"><%= exams.length > 0 ? 'All Exams:' : 'No Exams Created' %> </h1>
+    <!-------button to oral exams list that needs to be corrected by the teacher-------->
     <% if (locals.user.role === 'teacher') { %>
-      <a href="/oralexams" class="bg-black p-6 rounded-3xl font-bold text-3xl text-center text-white hover:text-gray-200">
-        View oral exams that need correction!
-      </a>
+    <a href="/oralexams" class="bg-black p-6 rounded-3xl font-bold text-3xl text-center text-white hover:text-gray-200">
+      View oral exams that need correction!
+    </a>
     <% } %>
     <div class="flex flex-row flex-wrap justify-center items-center content-center gap-8 px-6 lg:px-8 py-12 w-full min-h-full">
       <% exams.forEach(exam => { %>
@@ -37,11 +43,11 @@
         </div>
         <div class="flex flex-row justify-between w-full teacher-info">
           <a href="<%= exam.url %>" class="bg-black p-4 rounded-3xl w-full font-bold text-3xl text-center text-white hover:text-gray-200">
-          <% if(locals.user.role == 'student') { %>
-             Start Exam
-          <% } else { %>
+            <% if(locals.user.role == 'student') { %>
+            Start Exam
+            <% } else { %>
             View Exam
-          <% } %>
+            <% } %>
           </a>
         </div>
       </div>

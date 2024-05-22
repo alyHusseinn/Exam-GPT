@@ -10,10 +10,15 @@
 
   <div class="flex flex-col justify-center items-center content-center gap-8 bg-main px-6 lg:px-8 py-12 w-full min-h-full">
     <div class="flex flex-row flex-wrap justify-center items-center content-center gap-8 w-full teacher-info">
-      <h2 class="text-4xl name">Student: <%= locals.user.fullName %> </h2>
-      <img src="<%= locals.user.avatar %>" alt="avatar" class="rounded-xl w-40 h-40" />
+      <img src="<%= student.avatar %>" alt="avatar" class="rounded-xl w-40 h-40" />
+      <h2 class="font-bold text-4xl text-center name">Student: <%= student.fullName %> </h2>
+      <% if (locals.user.role === 'admin') { %>
+      <form action="/user/<%= student._id %>/delete" method="POST">
+        <input type="submit" value="Delete Student" class="bg-red p-6 rounded-2xl font-bold text-3xl text-center text-white hover:text-gray-200 cursor-pointer" />
+      </form>
+    <% } %>
     </div>
-    <h1 class="font-bold text-5xl text-gray-900 leading-9 tracking-tight">All Submited Exams: </h1>
+    <h1 class="font-bold text-4xl text-center text-gray-900 leading-9 tracking-tight"><%= submitions?.length > 0 ? 'Submitted Exams:' : 'No Exams Submitted' %> </h1>
     <div class="flex flex-row flex-wrap justify-center items-center content-center gap-8 px-6 lg:px-8 py-12 w-full min-h-full">
       <% submitions.forEach(submition => { %>
       <div class="flex flex-col justify-center items-center content-center gap-4 border-4 bg-secondary hover:shadow-2xl px-6 lg:px-8 py-12 border-text border-solid rounded-xl w-96 min-h-full text-center hover:cursor-pointer">
@@ -22,11 +27,11 @@
           <% if(submition.score != null) { %>
           <h2 class="text-2xl text-center name">Score: <%= submition.score %> %</h2>
           <a href="<%= submition.url %>" class="flex flex-row justify-between items-center bg-black p-4 rounded-3xl w-full font-bold text-3xl text-white hover:text-gray-200">
-            View My Answers!
+           <%= locals.user.role == 'student' ? 'View My Exam' :  'View Student Answers' %>
           </a>
           <% } else { %>
           <h2 class="border-2 bg-red p-4 border-black border-solid font-bold text-2xl text-center text-white">
-            Doesn't Corrected yet!
+            Hasn't Corrected yet!
           </h2>
           <% } %>
       </div>
