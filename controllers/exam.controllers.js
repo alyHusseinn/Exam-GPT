@@ -3,6 +3,19 @@ const Submition = require('../models/submition')
 const asyncHandler = require('express-async-handler')
 const { body, validationResult } = require('express-validator')
 
+const cloudinary = require('cloudinary').v2
+const {
+  CLOUD_NAME,
+  CLOUDINARY_KEY,
+  CLOUDINARY_SECRET
+} = require('../config/env')
+
+cloudinary.config({
+  cloud_name: CLOUD_NAME,
+  api_key: CLOUDINARY_KEY,
+  api_secret: CLOUDINARY_SECRET
+})
+
 // POST: create exam
 exports.exam_create = [
   body('topic')
@@ -91,7 +104,7 @@ exports.exam_get = asyncHandler(async (req, res, next) => {
 
       console.log(`Available Time: ${availableTime}`) // Log the available time
       // when the user exceeds the time limit and did not submit the answers
-      if(reminingTime <= 0 && !submition.answers) {
+      if (reminingTime <= 0 && !submition.answers) {
         console.log('You have exceeded the time limit. Please try again later.')
         return res.redirect('/home')
       }
@@ -114,12 +127,15 @@ exports.exam_get = asyncHandler(async (req, res, next) => {
     })
   } else {
     // show submitions that has answers and didn't exceed the time limit
-    const examSubmitions = await Submition.find({ exam: exam._id, answers: { $ne: null } })
+    const examSubmitions = await Submition.find({
+      exam: exam._id,
+      answers: { $ne: null }
+    })
       .select('-answers -wrongAnswers')
       .populate('student', '-password')
       .exec()
-      
-      // examSubmitions.sort((a, b) => b.startTime - a.startTime)
+
+    // examSubmitions.sort((a, b) => b.startTime - a.startTime)
     res.render('exam_view', {
       title: 'Exam',
       exam: exam,
@@ -173,7 +189,8 @@ exports.exam_results_get = asyncHandler(async (req, res, next) => {
   }
   if (
     submition.student._id.toString() !== req.user.id.toString() &&
-    submition.exam.teacher.toString() !== req.user.id.toString()
+    submition.exam.teacher.toString() !== req.user.id.toString() &&
+    req.user.role !== 'admin'
   ) {
     const error = new Error('You are not authorized to view this page')
     error.status = 401
@@ -193,15 +210,27 @@ exports.exam_delete = asyncHandler(async (req, res, next) => {
     error.status = 404
     return next(error)
   }
-  if (exam.teacher.toString() != req.user.id.toString()) {
+  if (
+    exam.teacher.toString() != req.user.id.toString() &&
+    req.user.role !== 'admin'
+  ) {
     const error = new Error('You are not authorized to delete this exam')
     error.status = 401
     return next(error)
   }
   try {
+    const examSubmitions = await Submition.find({ exam: req.params.id })
+
+    await Promise.all(
+      examSubmitions.map(async (submition) => {
+        await cloudinary.api.delete_resources(submition.answers, {
+          resource_type: 'video'
+        })
+        await Submition.findByIdAndDelete(submition._id)
+      })
+    )
     await Exam.findByIdAndDelete(req.params.id)
     // delete all that exam submitions
-    await Submition.deleteMany({ exam: req.params.id })
     res.redirect(req.user.url)
   } catch (err) {
     console.log(err)
