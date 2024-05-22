@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 const generateQuestions = require('../Ai/openai')
-const Submition = require('./submition')
 
 const Schema = mongoose.Schema
 
@@ -82,16 +81,6 @@ examSchema.pre('save', async function (next) {
   } catch (error) {
     console.error('Error generating questions:', error)
     next(error) // Pass the error to the next middleware or to Mongoose
-  }
-})
-
-examSchema.pre('remove', async function (next) {
-  try {
-    await Submition.deleteMany({ exam: this._id })
-    next()
-  } catch (error) {
-    console.log(error)
-    next(error)
   }
 })
 
