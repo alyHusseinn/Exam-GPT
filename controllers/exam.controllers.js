@@ -34,6 +34,11 @@ exports.exam_create = [
     .withMessage('Duration must be a number')
     .isInt({ min: 2, max: 60 })
     .withMessage('Duration must be between 5 and 60 minutes'),
+  body('degree')
+    .isNumeric()
+    .withMessage('Degree must be a number')
+    .isInt({ min: 1 })
+    .withMessage('Degree must be at least 1'),
 
   asyncHandler(async (req, res, next) => {
     const errors = validationResult(req)
@@ -43,11 +48,12 @@ exports.exam_create = [
         errors: errors.array()
       })
     } else {
-      const { topic, type, questions_number, duration } = req.body
+      const { topic, type, questions_number, duration, degree } = req.body
       const exam = new Exam({
         topic,
         type,
         duration,
+        degree,
         numberOfQuestions: questions_number,
         teacher: req.user.id // get from the cookie middlewared
       })

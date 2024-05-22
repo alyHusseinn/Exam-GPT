@@ -80,7 +80,7 @@ submitionSchema.pre('findOneAndUpdate', async function(next) {
       : exam.essayQuestions.map(question => question.answer);
 
     const wrongAnswers = getWrongAnswers(exam.type, rightAnswers, update.answers || submition.answers);
-    const score = ((rightAnswers.length - wrongAnswers.length) / rightAnswers.length) * 100;
+    const score = ((rightAnswers.length - wrongAnswers.length) / rightAnswers.length) * exam.degree;
 
     // Set the calculated fields in the update data
     update.wrongAnswers = wrongAnswers;

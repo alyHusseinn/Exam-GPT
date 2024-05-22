@@ -7,13 +7,13 @@
     <!-- header -->
     <%- include('partials/header'); %>
     <div
-      class="flex flex-col justify-center items-center content-center gap-16 bg-main px-6 lg:px-8 py-12 w-full min-h-full"
+      class="flex flex-col justify-center items-center content-center gap-8 bg-main px-6 lg:px-8 py-12 w-full min-h-full"
     >
       <% if (locals.user.role === 'student') { %> 
-      <h1 class="font-bold text-5xl text-gray-900 leading-9 tracking-tight">
+      <h1 class="mt-4 font-bold text-5xl text-gray-900 leading-9 tracking-tight">
         All Teachers
       </h1>
-      <div class="flex flex-row flex-wrap justify-center items-center gap-8 w-full text-text teachers-list">
+      <div class="flex flex-row flex-wrap justify-center items-center gap-8 mt-4 w-full text-text teachers-list">
         <% locals.teachers.forEach(function(teacher){ %>
         <a href="<%= teacher.url %>" class="flex flex-col justify-between items-center gap-4 border-4 bg-secondary hover:shadow-2xl p-4 border-text border-solid rounded-lg w-96 font-bold">
           <img src="<%= teacher.avatar %>" alt="avatar" class="rounded-xl w-full"> 
@@ -22,14 +22,12 @@
         <% }) %> 
       </div> 
       <% } else if(locals.user.role === 'teacher') { %>
-      <div class="sm:mx-auto sm:w-full sm:max-w-sm"> 
         <h2
-          class="mt-10 font-bold text-2xl text-center text-gray-900 leading-9 tracking-tight"
+          class="font-bold text-2xl text-center text-gray-900 leading-9 tracking-tight"
         >
           Create a new Exam!
         </h2>
-      </div>
-      <div class="sm:mx-auto mt-10 sm:w-full sm:max-w-sm">
+      <div class="sm:mx-auto mt-4 sm:w-full sm:max-w-sm">
         <form class="space-y-6 exam-form" method="POST" action="/exam">
           <div>
             <label
@@ -92,6 +90,26 @@
             </div>
           </div>
 
+          <div>
+            <div class="flex justify-between items-center">
+              <label
+                for="degree"
+                class="block font-medium text-gray-900 text-sm leading-6"
+                >Degree</label
+              >
+            </div>
+            <div class="mt-2">
+              <input
+                id="degree"
+                name="degree"
+                type="number"
+                min="1"
+                required
+                class="block border-0 bg-secondary shadow-md p-1.5 rounded-md w-full text-gray-900 sm:text-sm sm:leading-6 ring-1 ring-gray-300 ring-inset focus:ring-2 focus:ring-inset"
+              />
+            </div>
+          </div>
+
           <div class="mb-6">
             <div class="flex justify-between items-center">
               <label
@@ -100,7 +118,6 @@
                 >Type of The Exam?</label
               >
             </div>
-
             <diV class="mt-2">
               <select
                 value=""

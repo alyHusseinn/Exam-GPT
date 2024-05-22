@@ -38,7 +38,7 @@ exports.getTeacher = asyncHandler(async (req, res) => {
   const [teacher, exams] = await Promise.all([
     User.findById(req.params.id).select('-password').exec(),
     Exam.find({ teacher: req.params.id })
-      .select('topic numberOfQuestions type')
+      .select('topic numberOfQuestions type duration degree')
       .exec()
   ])
 
@@ -61,7 +61,7 @@ exports.getStudent = asyncHandler(async (req, res) => {
     User.findById(req.params.id).select('-password').exec(),
     Submition.find({ student: req.params.id, answers: { $ne: null } })
       .select('-wrongAnswers -answers')
-      .populate('exam', 'topic')
+      .populate('exam', 'topic degree duration')
       .exec()
   ])
 

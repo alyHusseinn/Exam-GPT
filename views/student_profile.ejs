@@ -25,7 +25,7 @@
           <h2 class="topic text-3xl text-center">Topic: <%= submition.exam.topic %></h2>
           <!-- <h2 class="text-2xl text-center">Teacher: <%= submition.exam.fullName %></h2> -->
           <% if(submition.score != null) { %>
-          <h2 class="text-2xl text-center name">Score: <%= submition.score %> %</h2>
+          <h2 class="text-2xl text-center name">Score: <%= submition.score + '/' + submition.exam.degree %></h2>
           <a href="<%= submition.url %>" class="flex flex-row justify-between items-center bg-black p-4 rounded-3xl w-full font-bold text-3xl text-white hover:text-gray-200">
            <%= locals.user.role == 'student' ? 'View My Exam' :  'View Student Answers' %>
           </a>

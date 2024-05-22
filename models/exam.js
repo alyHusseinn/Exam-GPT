@@ -23,6 +23,11 @@ const examSchema = new Schema({
     min: [2, 'Time must be at least 10 minutes'],
     max: [60, 'Time must be at most 60 minutes'],
   },
+  degree: {
+    type: Number,
+    required: true,
+    min: [1, 'Degree must be at least 1'],
+  },
   teacher: {
     type: Schema.Types.ObjectId,
     ref: 'User',

@@ -12,7 +12,8 @@
       <h2 class="border-2 bg-secondary p-4 border-text border-solid rounded-md text-2xl">Topic: <%= exam.topic %></h2>
       <h2 class="border-2 bg-secondary p-4 border-text border-solid rounded-md text-2xl">Type: <%= exam.type %></h2>
       <h2 class="border-2 bg-secondary p-4 border-text border-solid rounded-md text-2xl">Number of Questions: <%= exam.numberOfQuestions %></h2>
-      <h2 class="border-2 bg-secondary p-4 border-text border-solid rounded-md text-2xl">Duration: <%= exam.duration %></h2>
+      <h2 class="border-2 bg-secondary p-4 border-text border-solid rounded-md text-2xl">Duration: <%= exam.duration %> Minutes</h2>
+      <h2 class="border-2 bg-secondary p-4 border-text border-solid rounded-md text-2xl">Degree: <%= exam.degree %></h2>
       <form action="<%= exam.url %>/delete" method="POST" >
         <button type="submit" class="bg-red hover:bg-rose-900 p-4 rounded-md w-full font-bold text-2xl text-white hover:text-gray-200">Delete</button>
       </form>
@@ -53,7 +54,7 @@
             <img src="<%= submition.student.avatar %>" alt="" class="rounded-xl w-40 h-40">
             <h2 class="text-2xl name">Name: <%= submition.student.fullName %></h2>
             <% if(submition.score != null) { %>
-            <h2 class="text-2xl name">Score: <%= submition.score %> %</h2>
+            <h2 class="text-2xl name">Score: <%= submition.score + ' / ' + exam.degree %></h2>
             <a href="<%= submition.url %>" class="bg-black p-4 rounded-3xl w-full font-bold text-3xl text-center text-white hover:text-gray-200">View Submition!</a>
             <% } else { %>
             <a href="<%= '/oralexam/' + submition._id %>" class="bg-black p-4 rounded-3xl w-full font-bold text-3xl text-center text-white hover:text-gray-200">Needs Correction</a>
