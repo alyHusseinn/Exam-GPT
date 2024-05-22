@@ -528,6 +528,9 @@ video {
 .h-5 {
   height: 1.25rem;
 }
+.h-60 {
+  height: 15rem;
+}
 .h-80 {
   height: 20rem;
 }
@@ -540,6 +543,9 @@ video {
 .w-5 {
   width: 1.25rem;
 }
+.w-60 {
+  width: 15rem;
+}
 .w-80 {
   width: 20rem;
 }
@@ -548,6 +554,9 @@ video {
 }
 .w-full {
   width: 100%;
+}
+.cursor-pointer {
+  cursor: pointer;
 }
 .flex-row {
   flex-direction: row;
@@ -586,6 +595,9 @@ video {
   --tw-space-y-reverse: 0;
   margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
+}
+.rounded-2xl {
+  border-radius: 1rem;
 }
 .rounded-3xl {
   border-radius: 1.5rem;
