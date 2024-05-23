@@ -6,6 +6,7 @@ const multer = require('multer')
 const cloudinary = require('cloudinary').v2
 const fs = require('fs')
 const ObjectId = require('mongoose').Types.ObjectId
+const { body, validationResult } = require('express-validator')
 
 const upload = multer({ dest: 'uploads/' }) // Set destination folder if needed
 
@@ -140,35 +141,47 @@ exports.oralExamCorrection_form_get = asyncHandler(async (req, res, next) => {
 })
 
 // POST: oral exam corrections
-exports.oralExamSubmitCorrection_post = asyncHandler(async (req, res, next) => {
-  // we got in body an array of 'true' and 'false' values
-  // we shuold update the submition with the wrong answers and add his score
-  const submition = await Submition.findById(req.params.id).populate('exam')
-  const examCorrection = Object.values(req.body)
-  const WrongAnswers = []
-
-  examCorrection.forEach((answer, index) => {
-    if (answer === 'false') {
-      WrongAnswers.push(index)
+exports.oralExamSubmitCorrection_post = [
+  body('degree').isNumeric().withMessage('Degree must be a number'),
+  asyncHandler(async (req, res, next) => {
+    // we got in body an array of 'true' and 'false' values
+    // we shuold update the submition with the wrong answers and add his score
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      const error = new Error('Validation failed')
+      error.statusCode = 422
+      error.data = errors.array()
+      return next(error)
     }
-  })
+    const submition = await Submition.findById(req.params.id).populate('exam')
+    const degree = req.body.degree
+    // delete the degree from the body object
+    // delete req.body.degree
+    // const examCorrection = Object.values(req.body)
+    const wrongAnswers = []
 
-  const score =
-    ((examCorrection.length - WrongAnswers.length) / examCorrection.length) *
-    submition.exam.degree
+    // examCorrection.forEach((answer, index) => {
+    //   if (answer === 'false') {
+    //     wrongAnswers.push(index)
+    //   }
+    // })
+    // if body.degree > submition.exam.degree but the score as the whole degree
+    const score =
+      degree > submition.exam.degree ? submition.exam.degree : degree
 
-  const update = new Submition({
-    _id: req.params.id,
-    exam: submition.exam._id,
-    student: submition.student,
-    answers: submition.answers,
-    wrongAnswers: WrongAnswers,
-    score
+    const update = new Submition({
+      _id: req.params.id,
+      exam: submition.exam._id,
+      student: submition.student,
+      answers: submition.answers,
+      wrongAnswers,
+      score
+    })
+    try {
+      await Submition.findByIdAndUpdate(req.params.id, update)
+    } catch (err) {
+      console.log(err)
+    }
+    res.redirect(submition.url)
   })
-  try {
-    await Submition.findByIdAndUpdate(req.params.id, update)
-  } catch (err) {
-    console.log(err)
-  }
-  res.redirect(submition.url)
-})
+]

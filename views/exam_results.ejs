@@ -8,8 +8,8 @@
 <body class="bg-main">
   <%- include('partials/header'); %>
   <div class="flex flex-col justify-center items-center gap-4 bg-main px-6 lg:px-8 py-12 min-h-full">
-    <h2 class="mt-10 font-bold text-3xl text-center text-gray-900 leading-9 tracking-tight">Student: <%= submition.student.fullName %></h2>
-    <h2 class="font-bold text-2xl text-center text-gray-900 leading-9 tracking-tight">Topic: <%= submition.exam.topic %></h2>
+    <h2 class="mt-10 font-bold text-3xl text-center text-gray-900 leading-9 tracking-tight student_name">Student: <%= submition.student.fullName %></h2>
+    <h2 class="exam_topic font-bold text-2xl text-center text-gray-900 leading-9 tracking-tight">Topic: <%= submition.exam.topic %></h2>
 
     <img src="<%= submition.student.avatar %>" class="rounded-xl w-80 h-80 text-center" alt="">
     <h2 class="font-bold text-2xl text-center leading-9 tracking-tight">Score: <%= submition.score + ' / ' + submition.exam.degree %> </h2>
