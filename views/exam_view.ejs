@@ -14,11 +14,14 @@
       <h2 class="border-2 bg-secondary p-4 border-text border-solid rounded-md text-2xl">Number of Questions: <%= exam.numberOfQuestions %></h2>
       <h2 class="border-2 bg-secondary p-4 border-text border-solid rounded-md text-2xl">Duration: <%= exam.duration %> Minutes</h2>
       <h2 class="border-2 bg-secondary p-4 border-text border-solid rounded-md text-2xl">Degree: <%= exam.degree %></h2>
+      
+    </div>
+   <div class="flex flex-row flex-wrap justify-center items-center gap-4 w-full">
       <form action="<%= exam.url %>/delete" method="POST" >
         <button type="submit" class="bg-red hover:bg-rose-900 p-4 rounded-md w-full font-bold text-2xl text-white hover:text-gray-200">Delete</button>
       </form>
-    </div>
-    
+      <a href="/download/<%= exam._id %>" class="bg-green hover:bg-lime-700 p-4 rounded-md font-bold text-2xl text-white hover:text-gray-200">Download Exam Data</a>
+   </div> 
     <div class="flex flex-col gap-4 p-8 questions">
 
       <% if(exam.type === 'mcq') { %>

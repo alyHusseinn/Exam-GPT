@@ -45,6 +45,12 @@ router.post(
   examControllers.exam_delete
 )
 
+// route to donwload excel sheet of the exam
+router.get(
+  '/download/:id',
+  [checkJWT, checkRole(['teacher','admin'])],
+  examControllers.downloadExcel
+)
 // Oral Exam routes
 // student submit the oral exam
 router.post(
