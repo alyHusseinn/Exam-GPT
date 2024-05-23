@@ -154,12 +154,14 @@
       </div>
       <% } else { %>
         <!----for the admin add just two buttons to get all the teachers and students-->
-        <div class="flex flex-row flex-wrap justify-center items-center gap-8 w-full text-text teachers-list">
+        <h1 class="mt-4 font-bold text-5xl text-gray-900 leading-9 tracking-tight">Wellcome Admin <%= locals.user.fullName %></h1>
+        <img src="<%= locals.user.avatar %>" class="rounded-xl w-60 h-60" alt="admin photo">
+        <div class="flex flex-row flex-wrap justify-center items-center gap-8 mt-4 w-full text-text teachers-list">
           <a href="/teachers" class="flex flex-col justify-between items-center gap-4 border-4 bg-secondary hover:shadow-2xl p-4 border-text border-solid rounded-lg w-96 font-bold">
-            <h2 class="text-3xl">Teachers</h2> 
+            <h2 class="text-3xl">Manage Teachers</h2> 
           </a>
           <a href="/students" class="flex flex-col justify-between items-center gap-4 border-4 bg-secondary hover:shadow-2xl p-4 border-text border-solid rounded-lg w-96 font-bold">
-            <h2 class="text-3xl">Students</h2>
+            <h2 class="text-3xl">Manage Students</h2>
           </a>
         </div>
       <% } %>
