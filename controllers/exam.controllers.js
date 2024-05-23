@@ -2,6 +2,10 @@ const Exam = require('../models/exam')
 const Submition = require('../models/submition')
 const asyncHandler = require('express-async-handler')
 const { body, validationResult } = require('express-validator')
+const jsonToExcel = require('../utils/createExcel')
+const path = require('path')
+const fs = require('fs')
+const os = require('os')
 
 const cloudinary = require('cloudinary').v2
 const {
@@ -241,4 +245,51 @@ exports.exam_delete = asyncHandler(async (req, res, next) => {
   } catch (err) {
     console.log(err)
   }
+})
+
+exports.downloadExcel = asyncHandler(async (req, res, next) => {
+  const exam = await Exam.findById(req.params.id)
+  if (!exam) {
+    const error = new Error('Exam not found')
+    error.status = 404
+    return next(error)
+  }
+  if (
+    exam.teacher.toString() != req.user.id.toString() &&
+    req.user.role !== 'admin'
+  ) {
+    const error = new Error('You are not authorized to download this exam')
+    error.status = 401
+    return next(error)
+  }
+  const submitions = await Submition.find({
+    exam: req.params.id,
+    score: { $ne: null },
+    answers: { $ne: null }
+  })
+    .populate('student')
+    .exec()
+
+  // create json from submitions ( student._id,student.fullname, score)
+  const data = submitions.map((submition) => {
+    return {
+      id: submition.student._id,
+      username: submition.student.username,
+      name: submition.student.fullName,
+      score: submition.score
+    }
+  })
+
+  if(data.length === 0) {
+    res.redirect(exam.url)
+  }
+
+  const filePath = path.join(os.tmpdir(), `exam_${req.params.id}.xlsx`);
+  await jsonToExcel(data, filePath)
+  res.download(filePath, (err) => {
+    if (err) {
+      console.log(err)
+    }
+    fs.unlinkSync(filePath)
+  })
 })
