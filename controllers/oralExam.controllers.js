@@ -43,7 +43,10 @@ exports.oralExamSubmit = [
     }
     try {
       // Upload voice recordings to Cloudinary and get the URLs
-      const voiceIndexes = req.body.voiceIndexes.length > 1 ? req.body.voiceIndexes : [req.body.voiceIndexes]
+      const voiceIndexes =
+        req.body.voiceIndexes.length > 1
+          ? req.body.voiceIndexes
+          : [req.body.voiceIndexes]
       const tempUrl =
         'https://us-tuna-sounds-files.voicemod.net/1b25f6c5-45a8-4124-b0fc-2cd6585d08fe-1690339881517.mp3'
       const uploadPromises = req.files.map(async (file) => {
@@ -140,7 +143,7 @@ exports.oralExamCorrection_form_get = asyncHandler(async (req, res, next) => {
 exports.oralExamSubmitCorrection_post = asyncHandler(async (req, res, next) => {
   // we got in body an array of 'true' and 'false' values
   // we shuold update the submition with the wrong answers and add his score
-  const submition = await Submition.findById(req.params.id)
+  const submition = await Submition.findById(req.params.id).populate('exam')
   const examCorrection = Object.values(req.body)
   const WrongAnswers = []
 
@@ -152,11 +155,11 @@ exports.oralExamSubmitCorrection_post = asyncHandler(async (req, res, next) => {
 
   const score =
     ((examCorrection.length - WrongAnswers.length) / examCorrection.length) *
-    100
+    submition.exam.degree
 
   const update = new Submition({
     _id: req.params.id,
-    exam: submition.exam,
+    exam: submition.exam._id,
     student: submition.student,
     answers: submition.answers,
     wrongAnswers: WrongAnswers,

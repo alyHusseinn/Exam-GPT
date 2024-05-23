@@ -25,7 +25,7 @@ function startTimer(duration, display) {
     minutes = minutes < 10 ? '0' + minutes : minutes;
     seconds = seconds < 10 ? '0' + seconds : seconds;
 
-    display.textContent = minutes + ':' + seconds;
+    display.textContent = minutes + ':' + seconds + ' Minutes';
 
     if (--timer < 0) {
       clearInterval(intervalId);
