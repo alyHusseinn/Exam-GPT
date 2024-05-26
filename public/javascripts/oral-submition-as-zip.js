@@ -18,6 +18,8 @@ document.getElementById('downloadZip').addEventListener('click', async () => {
   // Download each audio file and add it to the zip archive
   await Promise.all(
     audioUrls.map(async (url, index) => {
+      // add https instead of http if it url strarts with http not https
+      url = 'https://' + url.split('//')[1]
       const response = await fetch(url)
       const blob = await response.blob()
 
